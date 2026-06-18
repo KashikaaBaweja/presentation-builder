@@ -1,11 +1,12 @@
 "use client";
 
+import { AccountMenu } from "@/components/AccountMenu";
 import { THEME_PRESETS } from "@/lib/constants";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import { useCallback, useRef } from "react";
 
-export function Toolbar() {
+export function Toolbar({ userEmail }: { userEmail: string }) {
   const accentColor = usePresentationStore((s) => s.accentColor);
   const setAccentColor = usePresentationStore((s) => s.setAccentColor);
   const logoUrl = usePresentationStore((s) => s.logoUrl);
@@ -155,6 +156,13 @@ export function Toolbar() {
         >
           {isExporting ? "Exporting…" : "Export to PDF"}
         </button>
+
+        {userEmail && (
+          <>
+            <div className="h-6 w-px bg-muted-200" />
+            <AccountMenu email={userEmail} />
+          </>
+        )}
       </div>
     </header>
   );

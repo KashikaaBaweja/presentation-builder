@@ -15,7 +15,7 @@ function useIsClient() {
   );
 }
 
-export function PresentationBuilder() {
+export function PresentationBuilder({ userEmail }: { userEmail: string }) {
   const isClient = useIsClient();
   const isExporting = usePresentationStore((s) => s.isExporting);
 
@@ -29,7 +29,7 @@ export function PresentationBuilder() {
 
   return (
     <div className="flex h-screen flex-col bg-muted-50">
-      <Toolbar />
+      <Toolbar userEmail={userEmail} />
       <div className="flex flex-1 overflow-hidden">
         <SlideSidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
