@@ -1,7 +1,16 @@
+import nextDynamic from "next/dynamic";
 import { Suspense } from "react";
-import LoginForm from "./LoginForm";
 
 export const dynamic = "force-dynamic";
+
+const LoginForm = nextDynamic(() => import("./LoginForm"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex min-h-full items-center justify-center bg-paper text-sm text-muted-500">
+      Loading…
+    </div>
+  ),
+});
 
 export default function LoginPage() {
   return (

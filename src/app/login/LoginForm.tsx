@@ -7,7 +7,6 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -25,6 +24,7 @@ export default function LoginForm() {
     setLoading(true);
     setError(null);
 
+    const { createClient } = await import("@/lib/supabase/client");
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,

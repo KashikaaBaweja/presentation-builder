@@ -7,7 +7,6 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -25,6 +24,7 @@ export default function SignupForm() {
     setError(null);
     setMessage(null);
 
+    const { createClient } = await import("@/lib/supabase/client");
     const supabase = createClient();
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
