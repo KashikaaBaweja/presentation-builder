@@ -44,3 +44,15 @@ body {
 .slide-frame {
   flex-shrink: 0;
 }
+
+/* Off-screen but in-viewport for PDF capture */
+.pdf-export-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1280px;
+  opacity: 0.01;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}

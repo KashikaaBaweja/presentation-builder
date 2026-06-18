@@ -2,11 +2,11 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide10CTA() {
-  const data = usePresentationStore((s) => s.data.cta);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("cta");
   const accentColor = usePresentationStore((s) => s.accentColor);
 
   return (
@@ -14,9 +14,7 @@ export function Slide10CTA() {
       <div className="flex h-full flex-col items-center justify-center p-16 text-center">
         <EditableText
           value={data.headline}
-          onChange={(headline) =>
-            updateData((d) => ({ ...d, cta: { ...d.cta, headline } }))
-          }
+          onChange={(headline) => update((d) => ({ ...d, headline }))}
           placeholder="Call to action headline"
           className="font-heading mb-6 max-w-4xl text-6xl font-bold leading-tight tracking-tight text-white"
           multiline
@@ -25,9 +23,7 @@ export function Slide10CTA() {
 
         <EditableText
           value={data.subtext}
-          onChange={(subtext) =>
-            updateData((d) => ({ ...d, cta: { ...d.cta, subtext } }))
-          }
+          onChange={(subtext) => update((d) => ({ ...d, subtext }))}
           placeholder="Supporting subtext"
           className="mb-10 max-w-2xl text-xl leading-relaxed text-white/70"
           multiline
@@ -40,9 +36,7 @@ export function Slide10CTA() {
         >
           <EditableText
             value={data.buttonLabel}
-            onChange={(buttonLabel) =>
-              updateData((d) => ({ ...d, cta: { ...d.cta, buttonLabel } }))
-            }
+            onChange={(buttonLabel) => update((d) => ({ ...d, buttonLabel }))}
             placeholder="Button label"
             className="text-white"
             as="span"
@@ -52,18 +46,14 @@ export function Slide10CTA() {
         <div className="flex gap-12 text-white/60">
           <EditableText
             value={data.email}
-            onChange={(email) =>
-              updateData((d) => ({ ...d, cta: { ...d.cta, email } }))
-            }
+            onChange={(email) => update((d) => ({ ...d, email }))}
             placeholder="Email address"
             className="text-base"
             as="div"
           />
           <EditableText
             value={data.website}
-            onChange={(website) =>
-              updateData((d) => ({ ...d, cta: { ...d.cta, website } }))
-            }
+            onChange={(website) => update((d) => ({ ...d, website }))}
             placeholder="Website URL"
             className="text-base"
             as="div"

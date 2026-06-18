@@ -2,13 +2,13 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 const FEATURE_ICONS = ["✦", "◈", "◎", "⬡", "◆", "▣"];
 
 export function Slide06Features() {
-  const { headline, items } = usePresentationStore((s) => s.data.features);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("features");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
@@ -16,34 +16,29 @@ export function Slide06Features() {
     <SlideFrame variant="light" showLogo={showLogo}>
       <div className="flex h-full flex-col p-16">
         <EditableText
-          value={headline}
-          onChange={(h) =>
-            updateData((d) => ({ ...d, features: { ...d.features, headline: h } }))
-          }
+          value={data.headline}
+          onChange={(headline) => update((d) => ({ ...d, headline }))}
           placeholder="Section headline"
           className="font-heading mb-10 text-5xl font-bold tracking-tight text-muted-900"
           as="h2"
         />
 
         <div className="grid flex-1 grid-cols-3 grid-rows-2 gap-6">
-          {items.map((item, i) => (
+          {data.items.map((item, i) => (
             <div
               key={i}
               className="flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-muted-100"
             >
-              <span
-                className="mb-4 text-2xl"
-                style={{ color: accentColor }}
-              >
+              <span className="mb-4 text-2xl" style={{ color: accentColor }}>
                 {FEATURE_ICONS[i]}
               </span>
               <EditableText
                 value={item.title}
                 onChange={(title) =>
-                  updateData((d) => {
-                    const newItems = [...d.features.items];
-                    newItems[i] = { ...newItems[i], title };
-                    return { ...d, features: { ...d.features, items: newItems } };
+                  update((d) => {
+                    const items = [...d.items];
+                    items[i] = { ...items[i], title };
+                    return { ...d, items };
                   })
                 }
                 placeholder="Feature title"
@@ -53,10 +48,10 @@ export function Slide06Features() {
               <EditableText
                 value={item.description}
                 onChange={(description) =>
-                  updateData((d) => {
-                    const newItems = [...d.features.items];
-                    newItems[i] = { ...newItems[i], description };
-                    return { ...d, features: { ...d.features, items: newItems } };
+                  update((d) => {
+                    const items = [...d.items];
+                    items[i] = { ...items[i], description };
+                    return { ...d, items };
                   })
                 }
                 placeholder="Feature description"

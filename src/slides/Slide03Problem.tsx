@@ -2,19 +2,19 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide03Problem() {
-  const { headline, paragraphs } = usePresentationStore((s) => s.data.problem);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("problem");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
   const updateParagraph = (index: number, value: string) => {
-    updateData((d) => {
-      const newParagraphs = [...d.problem.paragraphs];
-      newParagraphs[index] = value;
-      return { ...d, problem: { ...d.problem, paragraphs: newParagraphs } };
+    update((d) => {
+      const paragraphs = [...d.paragraphs];
+      paragraphs[index] = value;
+      return { ...d, paragraphs };
     });
   };
 
@@ -29,10 +29,8 @@ export function Slide03Problem() {
             ⚠
           </div>
           <EditableText
-            value={headline}
-            onChange={(h) =>
-              updateData((d) => ({ ...d, problem: { ...d.problem, headline: h } }))
-            }
+            value={data.headline}
+            onChange={(headline) => update((d) => ({ ...d, headline }))}
             placeholder="Problem headline"
             className="font-heading text-5xl font-bold leading-tight tracking-tight text-muted-900"
             multiline
@@ -41,7 +39,7 @@ export function Slide03Problem() {
         </div>
 
         <div className="flex w-3/5 flex-col justify-center gap-6">
-          {paragraphs.map((p, i) => (
+          {data.paragraphs.map((p, i) => (
             <EditableText
               key={i}
               value={p}

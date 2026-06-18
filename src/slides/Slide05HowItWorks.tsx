@@ -2,11 +2,11 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide05HowItWorks() {
-  const { headline, steps } = usePresentationStore((s) => s.data.howItWorks);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("howItWorks");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
@@ -14,13 +14,8 @@ export function Slide05HowItWorks() {
     <SlideFrame variant="light" showLogo={showLogo}>
       <div className="flex h-full flex-col p-16">
         <EditableText
-          value={headline}
-          onChange={(h) =>
-            updateData((d) => ({
-              ...d,
-              howItWorks: { ...d.howItWorks, headline: h },
-            }))
-          }
+          value={data.headline}
+          onChange={(headline) => update((d) => ({ ...d, headline }))}
           placeholder="Section headline"
           className="font-heading mb-14 text-center text-5xl font-bold tracking-tight text-muted-900"
           as="h2"
@@ -32,7 +27,7 @@ export function Slide05HowItWorks() {
             style={{ backgroundColor: `${accentColor}30` }}
           />
 
-          {steps.map((step, i) => (
+          {data.steps.map((step, i) => (
             <div key={i} className="relative z-10 flex flex-1 flex-col items-center text-center">
               <div
                 className="mb-6 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold text-white shadow-lg"
@@ -43,10 +38,10 @@ export function Slide05HowItWorks() {
               <EditableText
                 value={step.title}
                 onChange={(title) =>
-                  updateData((d) => {
-                    const newSteps = [...d.howItWorks.steps];
-                    newSteps[i] = { ...newSteps[i], title };
-                    return { ...d, howItWorks: { ...d.howItWorks, steps: newSteps } };
+                  update((d) => {
+                    const steps = [...d.steps];
+                    steps[i] = { ...steps[i], title };
+                    return { ...d, steps };
                   })
                 }
                 placeholder="Step title"
@@ -56,10 +51,10 @@ export function Slide05HowItWorks() {
               <EditableText
                 value={step.description}
                 onChange={(description) =>
-                  updateData((d) => {
-                    const newSteps = [...d.howItWorks.steps];
-                    newSteps[i] = { ...newSteps[i], description };
-                    return { ...d, howItWorks: { ...d.howItWorks, steps: newSteps } };
+                  update((d) => {
+                    const steps = [...d.steps];
+                    steps[i] = { ...steps[i], description };
+                    return { ...d, steps };
                   })
                 }
                 placeholder="Step description"

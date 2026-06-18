@@ -2,11 +2,11 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide07Testimonials() {
-  const { headline, items } = usePresentationStore((s) => s.data.testimonials);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("testimonials");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
@@ -14,20 +14,15 @@ export function Slide07Testimonials() {
     <SlideFrame variant="light" showLogo={showLogo}>
       <div className="flex h-full flex-col p-16">
         <EditableText
-          value={headline}
-          onChange={(h) =>
-            updateData((d) => ({
-              ...d,
-              testimonials: { ...d.testimonials, headline: h },
-            }))
-          }
+          value={data.headline}
+          onChange={(headline) => update((d) => ({ ...d, headline }))}
           placeholder="Section headline"
           className="font-heading mb-10 text-center text-5xl font-bold tracking-tight text-muted-900"
           as="h2"
         />
 
         <div className="grid flex-1 grid-cols-2 gap-8">
-          {items.map((item, i) => (
+          {data.items.map((item, i) => (
             <div
               key={i}
               className="flex flex-col justify-between rounded-2xl bg-white p-10 shadow-md ring-1 ring-muted-100"
@@ -42,13 +37,10 @@ export function Slide07Testimonials() {
                 <EditableText
                   value={item.quote}
                   onChange={(quote) =>
-                    updateData((d) => {
-                      const newItems = [...d.testimonials.items];
-                      newItems[i] = { ...newItems[i], quote };
-                      return {
-                        ...d,
-                        testimonials: { ...d.testimonials, items: newItems },
-                      };
+                    update((d) => {
+                      const items = [...d.items];
+                      items[i] = { ...items[i], quote };
+                      return { ...d, items };
                     })
                   }
                   placeholder="Testimonial quote"
@@ -69,13 +61,10 @@ export function Slide07Testimonials() {
                   <EditableText
                     value={item.name}
                     onChange={(name) =>
-                      updateData((d) => {
-                        const newItems = [...d.testimonials.items];
-                        newItems[i] = { ...newItems[i], name };
-                        return {
-                          ...d,
-                          testimonials: { ...d.testimonials, items: newItems },
-                        };
+                      update((d) => {
+                        const items = [...d.items];
+                        items[i] = { ...items[i], name };
+                        return { ...d, items };
                       })
                     }
                     placeholder="Name"
@@ -86,13 +75,10 @@ export function Slide07Testimonials() {
                     <EditableText
                       value={item.title}
                       onChange={(title) =>
-                        updateData((d) => {
-                          const newItems = [...d.testimonials.items];
-                          newItems[i] = { ...newItems[i], title };
-                          return {
-                            ...d,
-                            testimonials: { ...d.testimonials, items: newItems },
-                          };
+                        update((d) => {
+                          const items = [...d.items];
+                          items[i] = { ...items[i], title };
+                          return { ...d, items };
                         })
                       }
                       placeholder="Title"
@@ -103,13 +89,10 @@ export function Slide07Testimonials() {
                     <EditableText
                       value={item.company}
                       onChange={(company) =>
-                        updateData((d) => {
-                          const newItems = [...d.testimonials.items];
-                          newItems[i] = { ...newItems[i], company };
-                          return {
-                            ...d,
-                            testimonials: { ...d.testimonials, items: newItems },
-                          };
+                        update((d) => {
+                          const items = [...d.items];
+                          items[i] = { ...items[i], company };
+                          return { ...d, items };
                         })
                       }
                       placeholder="Company"

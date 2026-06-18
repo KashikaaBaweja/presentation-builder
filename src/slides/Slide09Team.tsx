@@ -2,11 +2,11 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide09Team() {
-  const { headline, members } = usePresentationStore((s) => s.data.team);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("team");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
@@ -14,17 +14,15 @@ export function Slide09Team() {
     <SlideFrame variant="light" showLogo={showLogo}>
       <div className="flex h-full flex-col p-16">
         <EditableText
-          value={headline}
-          onChange={(h) =>
-            updateData((d) => ({ ...d, team: { ...d.team, headline: h } }))
-          }
+          value={data.headline}
+          onChange={(headline) => update((d) => ({ ...d, headline }))}
           placeholder="Section headline"
           className="font-heading mb-12 text-center text-5xl font-bold tracking-tight text-muted-900"
           as="h2"
         />
 
-        <div className="grid flex-1 grid-cols-4 gap-8 items-center">
-          {members.map((member, i) => (
+        <div className="grid flex-1 grid-cols-4 items-center gap-8">
+          {data.members.map((member, i) => (
             <div
               key={i}
               className="flex flex-col items-center rounded-2xl bg-white p-8 shadow-sm ring-1 ring-muted-100"
@@ -38,10 +36,10 @@ export function Slide09Team() {
                 <EditableText
                   value={member.initials}
                   onChange={(initials) =>
-                    updateData((d) => {
-                      const newMembers = [...d.team.members];
-                      newMembers[i] = { ...newMembers[i], initials };
-                      return { ...d, team: { ...d.team, members: newMembers } };
+                    update((d) => {
+                      const members = [...d.members];
+                      members[i] = { ...members[i], initials };
+                      return { ...d, members };
                     })
                   }
                   placeholder="AB"
@@ -52,23 +50,23 @@ export function Slide09Team() {
               <EditableText
                 value={member.name}
                 onChange={(name) =>
-                  updateData((d) => {
-                    const newMembers = [...d.team.members];
-                    newMembers[i] = { ...newMembers[i], name };
-                    return { ...d, team: { ...d.team, members: newMembers } };
+                  update((d) => {
+                    const members = [...d.members];
+                    members[i] = { ...members[i], name };
+                    return { ...d, members };
                   })
                 }
                 placeholder="Name"
-                className="font-heading mb-1 text-xl font-bold text-muted-900 text-center"
+                className="font-heading mb-1 text-center text-xl font-bold text-muted-900"
                 as="h3"
               />
               <EditableText
                 value={member.role}
                 onChange={(role) =>
-                  updateData((d) => {
-                    const newMembers = [...d.team.members];
-                    newMembers[i] = { ...newMembers[i], role };
-                    return { ...d, team: { ...d.team, members: newMembers } };
+                  update((d) => {
+                    const members = [...d.members];
+                    members[i] = { ...members[i], role };
+                    return { ...d, members };
                   })
                 }
                 placeholder="Role"

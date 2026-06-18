@@ -32,11 +32,16 @@ export function Toolbar() {
   );
 
   const handleExport = useCallback(async () => {
-    const container = document.getElementById("pdf-export-container");
-    if (!container) return;
-
     setIsExporting(true);
     try {
+      // Wait for PdfExportContainer to mount and paint all slides
+      await new Promise((r) => setTimeout(r, 150));
+
+      const container = document.getElementById("pdf-export-container");
+      if (!container) {
+        throw new Error("Export container not ready");
+      }
+
       const slides = Array.from(
         container.querySelectorAll<HTMLElement>(".slide-frame")
       );

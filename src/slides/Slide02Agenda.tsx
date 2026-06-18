@@ -2,19 +2,19 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function Slide02Agenda() {
-  const items = usePresentationStore((s) => s.data.agenda.items);
-  const updateData = usePresentationStore((s) => s.updateData);
+  const { data, update } = useSlideData("agenda");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
 
   const updateItem = (index: number, value: string) => {
-    updateData((d) => {
-      const newItems = [...d.agenda.items];
-      newItems[index] = value;
-      return { ...d, agenda: { items: newItems } };
+    update((d) => {
+      const items = [...d.items];
+      items[index] = value;
+      return { ...d, items };
     });
   };
 
@@ -31,13 +31,11 @@ export function Slide02Agenda() {
           <h2 className="font-heading text-5xl font-bold tracking-tight text-muted-900">
             Agenda
           </h2>
-          <p className="mt-4 text-lg text-muted-500">
-            What we&apos;ll cover today
-          </p>
+          <p className="mt-4 text-lg text-muted-500">What we&apos;ll cover today</p>
         </div>
 
         <div className="flex w-3/5 flex-col justify-center gap-5">
-          {items.map((item, i) => (
+          {data.items.map((item, i) => (
             <div
               key={i}
               className="flex items-center gap-6 rounded-2xl bg-white px-8 py-5 shadow-sm ring-1 ring-muted-100"

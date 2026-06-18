@@ -1,12 +1,24 @@
-import type { PresentationData } from "./types";
+import type {
+  AgendaData,
+  CoverData,
+  CtaData,
+  FeaturesData,
+  HowItWorksData,
+  PricingData,
+  ProblemData,
+  SolutionData,
+  TeamData,
+  TestimonialsData,
+} from "./types";
 
-export const defaultPresentationData: PresentationData = {
+/** Default placeholder content used when creating new themed slides */
+export const defaultPresentationData = {
   cover: {
     company: "Acme Corp",
     title: "Product Launch Presentation",
     tagline: "Transforming the way teams collaborate and deliver",
     date: "June 2026",
-  },
+  } satisfies CoverData,
   agenda: {
     items: [
       "The Problem We're Solving",
@@ -16,7 +28,7 @@ export const defaultPresentationData: PresentationData = {
       "Social Proof & Results",
       "Pricing & Next Steps",
     ],
-  },
+  } satisfies AgendaData,
   problem: {
     headline: "Teams waste hours on fragmented workflows",
     paragraphs: [
@@ -24,7 +36,7 @@ export const defaultPresentationData: PresentationData = {
       "Existing solutions are either too complex for daily use or too simplistic to handle real-world workflows. Teams need something that bridges the gap — powerful yet intuitive.",
       "Without a unified approach, organizations struggle to maintain consistency, onboard new members, and scale their operations effectively.",
     ],
-  },
+  } satisfies ProblemData,
   solution: {
     headline: "One platform. Every workflow.",
     cards: [
@@ -44,7 +56,7 @@ export const defaultPresentationData: PresentationData = {
           "Get actionable analytics on team performance, project health, and resource allocation — all in one dashboard.",
       },
     ],
-  },
+  } satisfies SolutionData,
   howItWorks: {
     headline: "Get started in three simple steps",
     steps: [
@@ -64,7 +76,7 @@ export const defaultPresentationData: PresentationData = {
           "Roll out to your team, track adoption, and iterate with built-in feedback loops and analytics.",
       },
     ],
-  },
+  } satisfies HowItWorksData,
   features: {
     headline: "Everything you need to succeed",
     items: [
@@ -93,7 +105,7 @@ export const defaultPresentationData: PresentationData = {
         description: "SOC 2 Type II certified with SSO, audit logs, and encryption.",
       },
     ],
-  },
+  } satisfies FeaturesData,
   testimonials: {
     headline: "Trusted by industry leaders",
     items: [
@@ -112,7 +124,7 @@ export const defaultPresentationData: PresentationData = {
         company: "ScaleUp Ventures",
       },
     ],
-  },
+  } satisfies TestimonialsData,
   pricing: {
     headline: "Simple, transparent pricing",
     plans: [
@@ -149,7 +161,7 @@ export const defaultPresentationData: PresentationData = {
         ],
       },
     ],
-  },
+  } satisfies PricingData,
   team: {
     headline: "Meet the team",
     members: [
@@ -158,7 +170,7 @@ export const defaultPresentationData: PresentationData = {
       { name: "Taylor Morgan", role: "Head of Design", initials: "TM" },
       { name: "Casey Brooks", role: "Head of Growth", initials: "CB" },
     ],
-  },
+  } satisfies TeamData,
   cta: {
     headline: "Ready to transform your workflow?",
     subtext:
@@ -166,5 +178,5 @@ export const defaultPresentationData: PresentationData = {
     email: "hello@acmecorp.com",
     website: "www.acmecorp.com",
     buttonLabel: "Start Free Trial",
-  },
+  } satisfies CtaData,
 };

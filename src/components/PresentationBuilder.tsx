@@ -4,10 +4,13 @@ import { PdfExportContainer, SlidePreview } from "@/components/PresentationEdito
 import { SlideControls } from "@/components/SlideControls";
 import { SlideSidebar } from "@/components/SlideSidebar";
 import { Toolbar } from "@/components/Toolbar";
+import { usePresentationStore } from "@/store/usePresentationStore";
 import { useEffect, useState } from "react";
 
 export function PresentationBuilder() {
   const [mounted, setMounted] = useState(false);
+  const isExporting = usePresentationStore((s) => s.isExporting);
+
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
@@ -28,7 +31,7 @@ export function PresentationBuilder() {
           <SlideControls />
         </div>
       </div>
-      <PdfExportContainer />
+      {isExporting && <PdfExportContainer />}
     </div>
   );
 }

@@ -32,55 +32,95 @@ export interface TeamMember {
   initials: string;
 }
 
-export interface PresentationData {
-  cover: {
-    company: string;
-    title: string;
-    tagline: string;
-    date: string;
-  };
-  agenda: {
-    items: string[];
-  };
-  problem: {
-    headline: string;
-    paragraphs: string[];
-  };
-  solution: {
-    headline: string;
-    cards: SolutionCard[];
-  };
-  howItWorks: {
-    headline: string;
-    steps: ProcessStep[];
-  };
-  features: {
-    headline: string;
-    items: FeatureItem[];
-  };
-  testimonials: {
-    headline: string;
-    items: Testimonial[];
-  };
-  pricing: {
-    headline: string;
-    plans: PricingPlan[];
-  };
-  team: {
-    headline: string;
-    members: TeamMember[];
-  };
-  cta: {
-    headline: string;
-    subtext: string;
-    email: string;
-    website: string;
-    buttonLabel: string;
-  };
+export type SlideType =
+  | "cover"
+  | "agenda"
+  | "problem"
+  | "solution"
+  | "howItWorks"
+  | "features"
+  | "testimonials"
+  | "pricing"
+  | "team"
+  | "cta";
+
+export interface CoverData {
+  company: string;
+  title: string;
+  tagline: string;
+  date: string;
+}
+
+export interface AgendaData {
+  items: string[];
+}
+
+export interface ProblemData {
+  headline: string;
+  paragraphs: string[];
+}
+
+export interface SolutionData {
+  headline: string;
+  cards: SolutionCard[];
+}
+
+export interface HowItWorksData {
+  headline: string;
+  steps: ProcessStep[];
+}
+
+export interface FeaturesData {
+  headline: string;
+  items: FeatureItem[];
+}
+
+export interface TestimonialsData {
+  headline: string;
+  items: Testimonial[];
+}
+
+export interface PricingData {
+  headline: string;
+  plans: PricingPlan[];
+}
+
+export interface TeamData {
+  headline: string;
+  members: TeamMember[];
+}
+
+export interface CtaData {
+  headline: string;
+  subtext: string;
+  email: string;
+  website: string;
+  buttonLabel: string;
+}
+
+export interface SlideDataMap {
+  cover: CoverData;
+  agenda: AgendaData;
+  problem: ProblemData;
+  solution: SolutionData;
+  howItWorks: HowItWorksData;
+  features: FeaturesData;
+  testimonials: TestimonialsData;
+  pricing: PricingData;
+  team: TeamData;
+  cta: CtaData;
+}
+
+export type SlideContent = SlideDataMap[SlideType];
+
+export interface DeckSlide {
+  id: string;
+  type: SlideType;
 }
 
 export interface PresentationState {
-  data: PresentationData;
+  slides: DeckSlide[];
+  slideData: Record<string, SlideContent>;
   currentSlide: number;
   accentColor: string;
   logoUrl: string | null;

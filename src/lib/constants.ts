@@ -2,18 +2,21 @@ export const SLIDE_WIDTH = 1280;
 export const SLIDE_HEIGHT = 720;
 export const PDF_SCALE = 2; // ~192 DPI equivalent for crisp export
 
-export const SLIDE_NAMES = [
-  "Cover",
-  "Agenda",
-  "Problem",
-  "Solution",
-  "How It Works",
-  "Features",
-  "Testimonials",
-  "Pricing",
-  "Team",
-  "Call to Action",
-] as const;
+export const SLIDE_TYPE_LABELS = {
+  cover: "Cover",
+  agenda: "Agenda",
+  problem: "Problem",
+  solution: "Solution",
+  howItWorks: "How It Works",
+  features: "Features",
+  testimonials: "Testimonials",
+  pricing: "Pricing",
+  team: "Team",
+  cta: "Call to Action",
+} as const;
+
+/** @deprecated Use SLIDE_TYPE_LABELS with dynamic slides */
+export const SLIDE_NAMES = Object.values(SLIDE_TYPE_LABELS);
 
 export const DEFAULT_ACCENT = "#6366f1";
 
