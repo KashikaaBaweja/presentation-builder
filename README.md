@@ -8,7 +8,7 @@ A web-based presentation builder that lets you create a polished 10-slide deck d
 - **Inline editing** — Click any text to edit directly on the slide
 - **Session persistence** — Your edits are saved in the browser (localStorage)
 - **Slide navigation** — Sidebar thumbnails, Previous/Next buttons, and dot indicators
-- **PDF export** — Pixel-accurate 16:9 widescreen PDF at high resolution (html2canvas + jsPDF)
+- **PDF export** — Pixel-accurate 16:9 widescreen PDF at high resolution (html-to-image + jsPDF)
 - **Theme controls** — Accent color picker and optional logo upload
 
 ## Tech Stack
@@ -16,7 +16,7 @@ A web-based presentation builder that lets you create a polished 10-slide deck d
 - **Framework:** Next.js 16 (App Router) + React 19
 - **Styling:** Tailwind CSS 4
 - **State:** Zustand with localStorage persistence
-- **PDF Export:** html2canvas + jsPDF (client-side)
+- **PDF Export:** html-to-image + jsPDF (client-side; avoids Tailwind v4 oklab issues with html2canvas)
 - **Fonts:** Plus Jakarta Sans (headings) + Inter (body) via Google Fonts
 
 ## Getting Started

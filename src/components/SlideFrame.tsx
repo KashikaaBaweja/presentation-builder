@@ -58,6 +58,7 @@ export function SlideFrame({
       )}
 
       {showLogo && logoUrl && (
+        // eslint-disable-next-line @next/next/no-img-element -- user-uploaded data URLs for PDF export
         <img
           src={logoUrl}
           alt="Logo"
