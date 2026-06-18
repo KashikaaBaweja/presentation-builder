@@ -6,6 +6,39 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+const DEFAULT_MODEL = "gpt-3.5-turbo-16k";
+
+function getOpenAiModel() {
+  return process.env.OPENAI_MODEL?.trim() || DEFAULT_MODEL;
+}
+
+function openAiErrorMessage(error: unknown): string {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
+  ) {
+    const status = (error as { status: number }).status;
+    const message = (error as { message: string }).message;
+
+    if (status === 401) {
+      return "Invalid OpenAI API key. Check OPENAI_API_KEY in your environment.";
+    }
+    if (status === 403) {
+      return `Your OpenAI project cannot use model "${getOpenAiModel()}". Set OPENAI_MODEL to an allowed model (e.g. gpt-3.5-turbo-16k or gpt-5).`;
+    }
+    if (status === 429) {
+      return "OpenAI quota exceeded. Add billing or credits at platform.openai.com.";
+    }
+
+    return message;
+  }
+
+  return "Failed to generate presentation";
+}
+
 const SYSTEM_PROMPT = `You are a presentation writer. Given a topic, produce slide deck content as JSON.
 
 Return ONLY valid JSON matching this exact shape (same keys, nested structure, and array lengths). Replace placeholder text with real, specific content about the user's topic. Keep strings concise and presentation-ready.
@@ -60,7 +93,7 @@ export async function POST(request: Request) {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: getOpenAiModel(),
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
@@ -92,7 +125,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("OpenAI generation failed:", error);
     return NextResponse.json(
-      { error: "Failed to generate presentation" },
+      { error: openAiErrorMessage(error) },
       { status: 502 }
     );
   }
