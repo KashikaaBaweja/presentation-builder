@@ -1,0 +1,34 @@
+"use client";
+
+import { PdfExportContainer, SlidePreview } from "@/components/PresentationEditor";
+import { SlideControls } from "@/components/SlideControls";
+import { SlideSidebar } from "@/components/SlideSidebar";
+import { Toolbar } from "@/components/Toolbar";
+import { useEffect, useState } from "react";
+
+export function PresentationBuilder() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-muted-50">
+        <div className="text-sm text-muted-400">Loading presentation…</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-screen flex-col bg-muted-50">
+      <Toolbar />
+      <div className="flex flex-1 overflow-hidden">
+        <SlideSidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <SlidePreview />
+          <SlideControls />
+        </div>
+      </div>
+      <PdfExportContainer />
+    </div>
+  );
+}

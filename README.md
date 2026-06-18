@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Presentation Builder
+
+A web-based presentation builder that lets you create a polished 10-slide deck directly in the browser. Every text field is editable inline, and you can export the full presentation as a high-fidelity PDF.
+
+## Features
+
+- **10 professionally designed slides** — Cover, Agenda, Problem, Solution, How It Works, Features, Testimonials, Pricing, Team, and Call to Action
+- **Inline editing** — Click any text to edit directly on the slide
+- **Session persistence** — Your edits are saved in the browser (localStorage)
+- **Slide navigation** — Sidebar thumbnails, Previous/Next buttons, and dot indicators
+- **PDF export** — Pixel-accurate 16:9 widescreen PDF at high resolution (html2canvas + jsPDF)
+- **Theme controls** — Accent color picker and optional logo upload
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router) + React 19
+- **Styling:** Tailwind CSS 4
+- **State:** Zustand with localStorage persistence
+- **PDF Export:** html2canvas + jsPDF (client-side)
+- **Fonts:** Plus Jakarta Sans (headings) + Inter (body) via Google Fonts
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Install & Run
 
 ```bash
+git clone <repository-url>
+cd presentation-builder
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. **Edit content** — Click any text on a slide to edit it inline
+2. **Navigate** — Use the sidebar, Previous/Next buttons, or dot indicators
+3. **Customize** — Pick an accent color or upload a logo from the toolbar
+4. **Export** — Click "Export to PDF" to download your presentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## PDF Export Details
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Page size: 1280×720px (16:9 widescreen)
+- Render scale: 2× for crisp text (~192 DPI equivalent)
+- Export time: Typically under 5 seconds for all 10 slides
 
-## Deploy on Vercel
+## Browser Support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Tested on latest versions of Chrome, Firefox, and Safari. Optimized for viewports 1280px and wider.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+src/
+├── app/              # Next.js app router
+├── components/       # UI components (toolbar, navigation, editor)
+├── slides/           # Individual slide components (01–10)
+├── store/            # Zustand state management
+└── lib/              # Constants and PDF export utility
+```
+
+## License
+
+Private — built for Dagar.io
