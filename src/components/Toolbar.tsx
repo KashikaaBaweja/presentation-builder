@@ -1,13 +1,14 @@
 "use client";
 
 import { AccountMenu } from "@/components/AccountMenu";
+import { GenerateTopicModal } from "@/components/GenerateTopicModal";
 import { ThemePicker } from "@/components/ThemePicker";
 import { saveDeckForUser } from "@/lib/decks/decks";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
 import { createClient } from "@/lib/supabase/client";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function Toolbar({ userEmail }: { userEmail: string }) {
   const router = useRouter();
@@ -28,6 +29,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
   const setIsSaving = usePresentationStore((s) => s.setIsSaving);
   const getSavePayload = usePresentationStore((s) => s.getSavePayload);
 
+  const [generateOpen, setGenerateOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogoUpload = useCallback(
@@ -100,7 +102,12 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
   }, [deckId, getSavePayload, router, setDeckId, setIsSaving, userEmail]);
 
   return (
-    <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
+    <>
+      <GenerateTopicModal
+        open={generateOpen}
+        onClose={() => setGenerateOpen(false)}
+      />
+      <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
       <div className="flex items-center gap-3">
         <div
           className="flex h-9 w-9 items-center justify-center rounded-xl text-white text-sm font-bold"
@@ -178,6 +185,16 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
         {userEmail && (
           <button
             type="button"
+            onClick={() => setGenerateOpen(true)}
+            className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50"
+          >
+            Generate from topic
+          </button>
+        )}
+
+        {userEmail && (
+          <button
+            type="button"
             onClick={handleSave}
             disabled={isSaving}
             className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50 disabled:opacity-60"
@@ -204,5 +221,6 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
         )}
       </div>
     </header>
+    </>
   );
 }

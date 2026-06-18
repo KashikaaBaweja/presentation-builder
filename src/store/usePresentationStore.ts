@@ -7,6 +7,7 @@ import {
   DEFAULT_INK,
   DEFAULT_PAPER,
 } from "@/lib/constants";
+import type { InitialContent } from "@/lib/initialContent";
 import { getDeckTitle } from "@/lib/decks/utils";
 import type { DeckRow } from "@/lib/decks/types";
 import type { DeckSavePayload } from "@/lib/decks/types";
@@ -45,6 +46,7 @@ interface PresentationActions {
   hydrateFromDeck: (deck: DeckRow) => void;
   prepareNewDeck: () => void;
   getSavePayload: () => DeckSavePayload;
+  setAllContent: (content: InitialContent) => void;
 }
 
 type Store = typeof initialDeck & {
@@ -280,6 +282,20 @@ export const usePresentationStore = create<Store>()(
           logo: state.logoUrl,
         };
       },
+
+      setAllContent: (content) =>
+        set((state) => {
+          const slideData = { ...state.slideData };
+          for (const slide of state.slides) {
+            const generated = content[slide.type];
+            if (generated) {
+              slideData[slide.id] = structuredClone(
+                generated
+              ) as SlideContent;
+            }
+          }
+          return { slideData, currentSlide: 0 };
+        }),
 
       repairSlideData: (slideId, type) =>
         set((state) => {
