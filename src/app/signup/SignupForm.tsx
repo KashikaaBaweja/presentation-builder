@@ -8,15 +8,14 @@ import {
   AuthSubmit,
 } from "@/components/auth/AuthCard";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LoginForm() {
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/decks";
+export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -24,35 +23,47 @@ export default function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    if (signInError) {
-      setError(signInError.message);
+    if (signUpError) {
+      setError(signUpError.message);
       setLoading(false);
       return;
     }
 
-    router.push(next.startsWith("/") ? next : "/decks");
-    router.refresh();
+    if (data.session) {
+      router.push("/decks");
+      router.refresh();
+      return;
+    }
+
+    setMessage("Check your email to confirm your account, then sign in.");
+    setLoading(false);
   }
 
   return (
     <AuthCard
-      title="Welcome back"
-      subtitle="Sign in to edit and export your presentations."
+      title="Create an account"
+      subtitle="Start building polished slide decks in minutes."
       footer={
         <>
-          Don&apos;t have an account? <AuthLink href="/signup">Sign up</AuthLink>
+          Already have an account? <AuthLink href="/login">Sign in</AuthLink>
         </>
       }
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <AuthError message={error} />
+        {message && (
+          <p className="rounded-lg bg-accent/10 px-3 py-2 text-sm text-ink">
+            {message}
+          </p>
+        )}
         <AuthField
           id="email"
           label="Email"
@@ -67,10 +78,10 @@ export default function LoginForm() {
           type="password"
           value={password}
           onChange={setPassword}
-          autoComplete="current-password"
+          autoComplete="new-password"
         />
         <AuthSubmit loading={loading}>
-          {loading ? "Signing in…" : "Sign in"}
+          {loading ? "Creating account…" : "Sign up"}
         </AuthSubmit>
       </form>
     </AuthCard>
