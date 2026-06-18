@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* Theme tokens — ink, paper, accent map to Tailwind via @theme below */
 :root {
   --background: #faf9f7;
   --foreground: #1e1b4b;

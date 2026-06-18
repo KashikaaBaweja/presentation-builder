@@ -2,13 +2,20 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { DEFAULT_ACCENT } from "@/lib/constants";
 import {
-  accentToThemeId,
-  getDeckTitle,
-} from "@/lib/decks/utils";
+  DEFAULT_ACCENT,
+  DEFAULT_INK,
+  DEFAULT_PAPER,
+} from "@/lib/constants";
+import { getDeckTitle } from "@/lib/decks/utils";
 import type { DeckRow } from "@/lib/decks/types";
 import type { DeckSavePayload } from "@/lib/decks/types";
+import {
+  CUSTOM_THEME_ID,
+  DEFAULT_THEME_ID,
+  getDefaultTheme,
+  getThemeById,
+} from "@/lib/themes";
 import { createInitialDeck } from "./initialDeck";
 import { createSlideData, createSlideId } from "./slideTemplates";
 import type { SlideContent, SlideDataMap, SlideType } from "./types";
@@ -26,6 +33,7 @@ interface PresentationActions {
   addSlide: (type: SlideType) => void;
   removeSlide: (slideId: string) => void;
   setAccentColor: (color: string) => void;
+  setTheme: (themeId: string) => void;
   setLogoUrl: (url: string | null) => void;
   setShowLogoOnAllSlides: (show: boolean) => void;
   setIsExporting: (exporting: boolean) => void;
@@ -42,6 +50,9 @@ interface PresentationActions {
 type Store = typeof initialDeck & {
   currentSlide: number;
   accentColor: string;
+  inkColor: string;
+  paperColor: string;
+  themeId: string;
   logoUrl: string | null;
   showLogoOnAllSlides: boolean;
   isExporting: boolean;
@@ -77,6 +88,9 @@ export const usePresentationStore = create<Store>()(
       ...initialDeck,
       currentSlide: 0,
       accentColor: DEFAULT_ACCENT,
+      inkColor: DEFAULT_INK,
+      paperColor: DEFAULT_PAPER,
+      themeId: DEFAULT_THEME_ID,
       logoUrl: null,
       showLogoOnAllSlides: false,
       isExporting: false,
@@ -150,7 +164,19 @@ export const usePresentationStore = create<Store>()(
         });
       },
 
-      setAccentColor: (color) => set({ accentColor: color }),
+      setAccentColor: (color) =>
+        set({ accentColor: color, themeId: CUSTOM_THEME_ID }),
+
+      setTheme: (themeId) => {
+        const preset = getThemeById(themeId);
+        if (!preset) return;
+        set({
+          themeId: preset.id,
+          accentColor: preset.accent,
+          inkColor: preset.ink,
+          paperColor: preset.paper,
+        });
+      },
 
       setLogoUrl: (url) => set({ logoUrl: url }),
 
@@ -160,10 +186,14 @@ export const usePresentationStore = create<Store>()(
 
       resetPresentation: () => {
         const deck = createInitialDeck();
+        const defaultTheme = getDefaultTheme();
         set({
           ...deck,
           currentSlide: 0,
-          accentColor: DEFAULT_ACCENT,
+          accentColor: defaultTheme.accent,
+          inkColor: defaultTheme.ink,
+          paperColor: defaultTheme.paper,
+          themeId: defaultTheme.id,
           logoUrl: null,
           showLogoOnAllSlides: false,
           deckId: get().deckId,
@@ -182,11 +212,33 @@ export const usePresentationStore = create<Store>()(
           deck.content.slideData
         );
 
+        const preset = deck.theme_id ? getThemeById(deck.theme_id) : undefined;
+
+        if (preset) {
+          set({
+            slides,
+            slideData,
+            currentSlide: 0,
+            accentColor: preset.accent,
+            inkColor: preset.ink,
+            paperColor: preset.paper,
+            themeId: preset.id,
+            logoUrl: deck.logo,
+            showLogoOnAllSlides: deck.content.showLogoOnAllSlides ?? false,
+            deckId: deck.id,
+            isLoadingDeck: false,
+          });
+          return;
+        }
+
         set({
           slides,
           slideData,
           currentSlide: 0,
           accentColor: deck.accent ?? DEFAULT_ACCENT,
+          inkColor: deck.content.ink ?? DEFAULT_INK,
+          paperColor: deck.content.paper ?? DEFAULT_PAPER,
+          themeId: CUSTOM_THEME_ID,
           logoUrl: deck.logo,
           showLogoOnAllSlides: deck.content.showLogoOnAllSlides ?? false,
           deckId: deck.id,
@@ -196,10 +248,14 @@ export const usePresentationStore = create<Store>()(
 
       prepareNewDeck: () => {
         const deck = createInitialDeck();
+        const defaultTheme = getDefaultTheme();
         set({
           ...deck,
           currentSlide: 0,
-          accentColor: DEFAULT_ACCENT,
+          accentColor: defaultTheme.accent,
+          inkColor: defaultTheme.ink,
+          paperColor: defaultTheme.paper,
+          themeId: defaultTheme.id,
           logoUrl: null,
           showLogoOnAllSlides: false,
           deckId: null,
@@ -215,8 +271,11 @@ export const usePresentationStore = create<Store>()(
             slides: state.slides,
             slideData: state.slideData,
             showLogoOnAllSlides: state.showLogoOnAllSlides,
+            ink: state.inkColor,
+            paper: state.paperColor,
           },
-          theme_id: accentToThemeId(state.accentColor),
+          theme_id:
+            state.themeId === CUSTOM_THEME_ID ? null : state.themeId,
           accent: state.accentColor,
           logo: state.logoUrl,
         };
@@ -239,6 +298,9 @@ export const usePresentationStore = create<Store>()(
         slides: state.slides,
         slideData: state.slideData,
         accentColor: state.accentColor,
+        inkColor: state.inkColor,
+        paperColor: state.paperColor,
+        themeId: state.themeId,
         logoUrl: state.logoUrl,
         showLogoOnAllSlides: state.showLogoOnAllSlides,
       }),
@@ -246,11 +308,15 @@ export const usePresentationStore = create<Store>()(
         const saved = persisted as Partial<Store> | undefined;
         if (!saved) return current;
         const { slides, slideData } = normalizeDeck(saved.slides, saved.slideData);
+        const defaultTheme = getDefaultTheme();
         return {
           ...current,
           ...saved,
           slides,
           slideData,
+          inkColor: saved.inkColor ?? defaultTheme.ink,
+          paperColor: saved.paperColor ?? defaultTheme.paper,
+          themeId: saved.themeId ?? defaultTheme.id,
           currentSlide: clampSlideIndex(current.currentSlide, slides.length),
         };
       },

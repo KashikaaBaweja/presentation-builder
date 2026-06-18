@@ -1,14 +1,7 @@
-import { THEME_PRESETS } from "@/lib/constants";
-import type { DeckSlide, SlideContent } from "@/store/types";
-import type { CoverData } from "@/store/types";
+import type { DeckSlide, SlideContent, CoverData } from "@/store/types";
 import type { DeckContent } from "./types";
 
 export const UNTITLED_DECK = "Untitled presentation";
-
-export function accentToThemeId(accent: string): string | null {
-  const preset = THEME_PRESETS.find((p) => p.value === accent);
-  return preset ? preset.name.toLowerCase() : null;
-}
 
 export function getDeckTitle(
   slides: DeckSlide[],
@@ -32,6 +25,8 @@ export function parseDeckContent(raw: unknown): DeckContent | null {
     slides: value.slides,
     slideData: value.slideData,
     showLogoOnAllSlides: Boolean(value.showLogoOnAllSlides),
+    ink: typeof value.ink === "string" ? value.ink : undefined,
+    paper: typeof value.paper === "string" ? value.paper : undefined,
   };
 }
 

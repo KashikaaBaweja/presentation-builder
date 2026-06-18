@@ -1,3 +1,5 @@
+import { getDefaultTheme } from "@/lib/themes";
+
 export const SLIDE_WIDTH = 1280;
 export const SLIDE_HEIGHT = 720;
 export const PDF_SCALE = 2; // ~192 DPI equivalent for crisp export
@@ -18,13 +20,6 @@ export const SLIDE_TYPE_LABELS = {
 /** @deprecated Use SLIDE_TYPE_LABELS with dynamic slides */
 export const SLIDE_NAMES = Object.values(SLIDE_TYPE_LABELS);
 
-export const DEFAULT_ACCENT = "#6366f1";
-
-export const THEME_PRESETS = [
-  { name: "Indigo", value: "#6366f1" },
-  { name: "Violet", value: "#8b5cf6" },
-  { name: "Teal", value: "#14b8a6" },
-  { name: "Rose", value: "#f43f5e" },
-  { name: "Amber", value: "#f59e0b" },
-  { name: "Sky", value: "#0ea5e9" },
-] as const;
+export const DEFAULT_ACCENT = getDefaultTheme().accent;
+export const DEFAULT_INK = getDefaultTheme().ink;
+export const DEFAULT_PAPER = getDefaultTheme().paper;

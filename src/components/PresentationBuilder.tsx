@@ -4,6 +4,7 @@ import { DeckHydrator } from "@/components/DeckHydrator";
 import { PdfExportContainer, SlidePreview } from "@/components/PresentationEditor";
 import { SlideControls } from "@/components/SlideControls";
 import { SlideSidebar } from "@/components/SlideSidebar";
+import { ThemeSync } from "@/components/ThemeSync";
 import { Toolbar } from "@/components/Toolbar";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import { useSyncExternalStore } from "react";
@@ -36,6 +37,7 @@ export function PresentationBuilder({
 
   return (
     <DeckHydrator deckId={deckId}>
+      <ThemeSync />
       <div className="flex h-screen flex-col bg-muted-50">
         <Toolbar userEmail={userEmail} />
         <div className="flex flex-1 overflow-hidden">

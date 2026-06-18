@@ -1,8 +1,8 @@
 "use client";
 
 import { AccountMenu } from "@/components/AccountMenu";
+import { ThemePicker } from "@/components/ThemePicker";
 import { saveDeckForUser } from "@/lib/decks/decks";
-import { THEME_PRESETS } from "@/lib/constants";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
 import { createClient } from "@/lib/supabase/client";
 import { usePresentationStore } from "@/store/usePresentationStore";
@@ -118,23 +118,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
 
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-400">Theme</span>
-          <div className="flex gap-1.5">
-            {THEME_PRESETS.map((preset) => (
-              <button
-                key={preset.value}
-                type="button"
-                title={preset.name}
-                onClick={() => setAccentColor(preset.value)}
-                className={`h-7 w-7 rounded-full border-2 transition-transform hover:scale-110 ${
-                  accentColor === preset.value
-                    ? "border-muted-900 scale-110"
-                    : "border-transparent"
-                }`}
-                style={{ backgroundColor: preset.value }}
-              />
-            ))}
-          </div>
+          <ThemePicker />
           <input
             type="color"
             value={accentColor}

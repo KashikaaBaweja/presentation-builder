@@ -4,6 +4,8 @@ export interface DeckContent {
   slides: DeckSlide[];
   slideData: Record<string, SlideContent>;
   showLogoOnAllSlides: boolean;
+  ink?: string;
+  paper?: string;
 }
 
 export interface DeckRow {
