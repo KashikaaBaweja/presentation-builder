@@ -1,12 +1,16 @@
 "use client";
 
 import { AccountMenu } from "@/components/AccountMenu";
+import { saveDeckForUser } from "@/lib/decks/decks";
 import { THEME_PRESETS } from "@/lib/constants";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
+import { createClient } from "@/lib/supabase/client";
 import { usePresentationStore } from "@/store/usePresentationStore";
+import { useRouter } from "next/navigation";
 import { useCallback, useRef } from "react";
 
 export function Toolbar({ userEmail }: { userEmail: string }) {
+  const router = useRouter();
   const accentColor = usePresentationStore((s) => s.accentColor);
   const setAccentColor = usePresentationStore((s) => s.setAccentColor);
   const logoUrl = usePresentationStore((s) => s.logoUrl);
@@ -18,6 +22,11 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
   const isExporting = usePresentationStore((s) => s.isExporting);
   const setIsExporting = usePresentationStore((s) => s.setIsExporting);
   const resetPresentation = usePresentationStore((s) => s.resetPresentation);
+  const deckId = usePresentationStore((s) => s.deckId);
+  const setDeckId = usePresentationStore((s) => s.setDeckId);
+  const isSaving = usePresentationStore((s) => s.isSaving);
+  const setIsSaving = usePresentationStore((s) => s.setIsSaving);
+  const getSavePayload = usePresentationStore((s) => s.getSavePayload);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,6 +63,41 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
       setIsExporting(false);
     }
   }, [setIsExporting]);
+
+  const handleSave = useCallback(async () => {
+    if (!userEmail) return;
+
+    setIsSaving(true);
+    try {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error("Not signed in");
+      }
+
+      const payload = getSavePayload();
+      const savedId = await saveDeckForUser(
+        supabase,
+        user.id,
+        deckId,
+        payload
+      );
+
+      setDeckId(savedId);
+
+      if (!deckId) {
+        router.replace(`/editor?deck=${savedId}`);
+      }
+    } catch (error) {
+      console.error("Save failed:", error);
+      alert("Save failed. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  }, [deckId, getSavePayload, router, setDeckId, setIsSaving, userEmail]);
 
   return (
     <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
@@ -146,6 +190,17 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
         >
           Reset
         </button>
+
+        {userEmail && (
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50 disabled:opacity-60"
+          >
+            {isSaving ? "Saving…" : "Save"}
+          </button>
+        )}
 
         <button
           type="button"

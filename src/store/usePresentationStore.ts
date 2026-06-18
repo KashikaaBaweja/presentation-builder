@@ -3,6 +3,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { DEFAULT_ACCENT } from "@/lib/constants";
+import {
+  accentToThemeId,
+  getDeckTitle,
+} from "@/lib/decks/utils";
+import type { DeckRow } from "@/lib/decks/types";
+import type { DeckSavePayload } from "@/lib/decks/types";
 import { createInitialDeck } from "./initialDeck";
 import { createSlideData, createSlideId } from "./slideTemplates";
 import type { SlideContent, SlideDataMap, SlideType } from "./types";
@@ -25,6 +31,12 @@ interface PresentationActions {
   setIsExporting: (exporting: boolean) => void;
   resetPresentation: () => void;
   repairSlideData: (slideId: string, type: SlideType) => void;
+  setDeckId: (deckId: string | null) => void;
+  setIsSaving: (isSaving: boolean) => void;
+  setIsLoadingDeck: (isLoading: boolean) => void;
+  hydrateFromDeck: (deck: DeckRow) => void;
+  prepareNewDeck: () => void;
+  getSavePayload: () => DeckSavePayload;
 }
 
 type Store = typeof initialDeck & {
@@ -33,6 +45,9 @@ type Store = typeof initialDeck & {
   logoUrl: string | null;
   showLogoOnAllSlides: boolean;
   isExporting: boolean;
+  deckId: string | null;
+  isSaving: boolean;
+  isLoadingDeck: boolean;
 } & PresentationActions;
 
 function clampSlideIndex(index: number, total: number) {
@@ -65,6 +80,9 @@ export const usePresentationStore = create<Store>()(
       logoUrl: null,
       showLogoOnAllSlides: false,
       isExporting: false,
+      deckId: null,
+      isSaving: false,
+      isLoadingDeck: false,
 
       setCurrentSlide: (index) => {
         const { slides } = get();
@@ -148,7 +166,60 @@ export const usePresentationStore = create<Store>()(
           accentColor: DEFAULT_ACCENT,
           logoUrl: null,
           showLogoOnAllSlides: false,
+          deckId: get().deckId,
         });
+      },
+
+      setDeckId: (deckId) => set({ deckId }),
+
+      setIsSaving: (isSaving) => set({ isSaving }),
+
+      setIsLoadingDeck: (isLoadingDeck) => set({ isLoadingDeck }),
+
+      hydrateFromDeck: (deck) => {
+        const { slides, slideData } = normalizeDeck(
+          deck.content.slides,
+          deck.content.slideData
+        );
+
+        set({
+          slides,
+          slideData,
+          currentSlide: 0,
+          accentColor: deck.accent ?? DEFAULT_ACCENT,
+          logoUrl: deck.logo,
+          showLogoOnAllSlides: deck.content.showLogoOnAllSlides ?? false,
+          deckId: deck.id,
+          isLoadingDeck: false,
+        });
+      },
+
+      prepareNewDeck: () => {
+        const deck = createInitialDeck();
+        set({
+          ...deck,
+          currentSlide: 0,
+          accentColor: DEFAULT_ACCENT,
+          logoUrl: null,
+          showLogoOnAllSlides: false,
+          deckId: null,
+          isLoadingDeck: false,
+        });
+      },
+
+      getSavePayload: () => {
+        const state = get();
+        return {
+          title: getDeckTitle(state.slides, state.slideData),
+          content: {
+            slides: state.slides,
+            slideData: state.slideData,
+            showLogoOnAllSlides: state.showLogoOnAllSlides,
+          },
+          theme_id: accentToThemeId(state.accentColor),
+          accent: state.accentColor,
+          logo: state.logoUrl,
+        };
       },
 
       repairSlideData: (slideId, type) =>
