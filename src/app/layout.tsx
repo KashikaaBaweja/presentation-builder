@@ -14,10 +14,33 @@ const inter = Inter({
   weight: ["400", "500", "600"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000");
+
+const title = "Presentation Builder — Build & Export Decks Instantly";
+const description =
+  "Build polished 10-slide presentations online with inline editing, AI content, themes, and pixel-accurate PDF export.";
+
 export const metadata: Metadata = {
-  title: "Presentation Builder — Build & Export Decks Instantly",
-  description:
-    "Create a polished 10-slide presentation online — inline editing, AI-generated content, custom themes, and pixel-accurate PDF export in minutes.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    siteName: "Presentation Builder",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({
