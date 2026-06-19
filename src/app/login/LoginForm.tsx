@@ -8,8 +8,10 @@ import {
   AuthSubmit,
 } from "@/components/auth/AuthCard";
 import { formatAuthError } from "@/lib/supabase/auth-errors";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -18,7 +20,14 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setError(
+        "Supabase is not configured for this deployment. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY on Vercel, then redeploy."
+      );
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +35,6 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -38,8 +46,7 @@ export default function LoginForm() {
         return;
       }
 
-      router.push(next.startsWith("/") ? next : "/decks");
-      router.refresh();
+      window.location.href = next.startsWith("/") ? next : "/decks";
     } catch (err) {
       setError(formatAuthError(err));
     } finally {

@@ -43,8 +43,20 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (
+    error &&
+    (error.code === "refresh_token_not_found" ||
+      error.code === "session_not_found" ||
+      error.message.includes("Refresh Token"))
+  ) {
+    await supabase.auth.signOut();
+  }
+
   const { pathname } = request.nextUrl;
 
   if (isProtectedPath(pathname) && !user) {

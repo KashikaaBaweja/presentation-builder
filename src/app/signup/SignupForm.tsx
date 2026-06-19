@@ -7,9 +7,10 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
-import { formatAuthError } from "@/lib/supabase/auth-errors";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { formatAuthError, isSignupEmailFailure } from "@/lib/supabase/auth-errors";
+import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { useEffect, useState } from "react";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,14 @@ export default function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setError(
+        "Supabase is not configured for this deployment. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY on Vercel, then redeploy."
+      );
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,7 +34,6 @@ export default function SignupForm() {
     setMessage(null);
 
     try {
-      const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -37,13 +44,32 @@ export default function SignupForm() {
       });
 
       if (signUpError) {
+        if (isSignupEmailFailure(signUpError)) {
+          const { data: signInData, error: signInError } =
+            await supabase.auth.signInWithPassword({ email, password });
+
+          if (signInData.session) {
+            window.location.href = "/decks";
+            return;
+          }
+
+          if (signInError?.code === "email_not_confirmed") {
+            setError(formatAuthError(signUpError));
+            return;
+          }
+
+          if (signInError?.code === "invalid_credentials") {
+            setError("An account with this email may already exist. Try signing in instead.");
+            return;
+          }
+        }
+
         setError(formatAuthError(signUpError));
         return;
       }
 
       if (data.session) {
-        router.push("/decks");
-        router.refresh();
+        window.location.href = "/decks";
         return;
       }
 

@@ -1,5 +1,5 @@
 export function getSupabaseUrl(): string {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   if (!url) {
     throw new Error("Missing environment variable: NEXT_PUBLIC_SUPABASE_URL");
   }
@@ -7,15 +7,26 @@ export function getSupabaseUrl(): string {
 }
 
 export function getSupabaseAnonKey(): string {
-  const key =
+  const key = (
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  )?.trim();
 
   if (!key) {
     throw new Error(
-      "Missing environment variable: NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      "Missing environment variable: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
     );
   }
 
   return key;
+}
+
+export function isSupabaseConfigured(): boolean {
+  try {
+    getSupabaseUrl();
+    getSupabaseAnonKey();
+    return true;
+  } catch {
+    return false;
+  }
 }
