@@ -25,7 +25,7 @@ function DragHandle({
         e.dataTransfer.setData("text/plain", String(index));
       }}
       onDragEnd={onDragEnd}
-      className="flex shrink-0 cursor-grab touch-none flex-col justify-center gap-0.5 rounded-md px-1 py-2 text-muted-300 opacity-0 transition-opacity hover:bg-muted-100 hover:text-muted-500 group-hover:opacity-100 active:cursor-grabbing"
+      className="flex shrink-0 cursor-grab touch-none flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-2 text-muted-400 transition-colors hover:bg-muted-100 hover:text-muted-600 active:cursor-grabbing"
     >
       <span className="block h-0.5 w-2.5 rounded-full bg-current" />
       <span className="block h-0.5 w-2.5 rounded-full bg-current" />
@@ -67,13 +67,13 @@ export function SlideSidebar() {
   );
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-muted-200 bg-white">
+    <aside className="flex w-60 shrink-0 flex-col border-r border-muted-200 bg-white">
       <div className="flex-1 overflow-y-auto p-4">
         <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-400">
           Slides
         </h2>
-        <p className="mb-3 px-2 text-[11px] text-muted-400">
-          Drag the handle to reorder
+        <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
+          Use the grip on the left to drag slides into a new order.
         </p>
         <div className="flex flex-col gap-2">
           {slides.map((slide, index) => (

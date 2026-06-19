@@ -209,7 +209,16 @@ export function LayoutPicker() {
   }, [open]);
 
   if (!active || !isLayoutSlideType(active.type)) {
-    return null;
+    return (
+      <button
+        type="button"
+        disabled
+        title="Layout options appear on Cover, Solution, Features, Pricing, and Custom slides"
+        className="shrink-0 cursor-not-allowed rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-400 opacity-60"
+      >
+        Layout
+      </button>
+    );
   }
 
   const slideType = active.type;
@@ -228,13 +237,14 @@ export function LayoutPicker() {
   };
 
   return (
-    <div ref={menuRef} className="relative">
+    <div ref={menuRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-600 transition-colors hover:bg-muted-50"
         aria-expanded={open}
         aria-haspopup="listbox"
+        title="Change layout for this slide"
       >
         Layout
       </button>

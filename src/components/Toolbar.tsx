@@ -128,8 +128,8 @@ export function Toolbar({
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2">
           <ThemePicker />
           <LayoutPicker />
           <input
