@@ -1,9 +1,12 @@
 import type { InitialContent } from "@/lib/initialContent";
 import { initialContent } from "@/lib/initialContent";
 
-type GeneratedSlideType = keyof InitialContent;
+/** Slide types produced by AI generation (excludes user-added custom slides). */
+type GeneratedSlideType = Exclude<keyof InitialContent, "custom">;
 
-const SLIDE_TYPES = Object.keys(initialContent) as GeneratedSlideType[];
+const SLIDE_TYPES = Object.keys(initialContent).filter(
+  (key): key is GeneratedSlideType => key !== "custom"
+);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
