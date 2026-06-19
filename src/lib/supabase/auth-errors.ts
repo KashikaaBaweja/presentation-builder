@@ -50,7 +50,7 @@ function mapKnownAuthCode(code: string): string {
     case "user_already_exists":
       return "An account with this email already exists. Try signing in.";
     case "weak_password":
-      return "Password is too weak. Use at least 6 characters.";
+      return "Password is too weak. Use at least 8 characters.";
     default:
       return `Sign up failed (${code}). Please try again.`;
   }

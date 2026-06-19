@@ -38,6 +38,7 @@ export function AuthField({
   onChange,
   autoComplete,
   required = true,
+  minLength,
 }: {
   id: string;
   label: string;
@@ -46,6 +47,7 @@ export function AuthField({
   onChange: (value: string) => void;
   autoComplete?: string;
   required?: boolean;
+  minLength?: number;
 }) {
   return (
     <div>
@@ -59,6 +61,7 @@ export function AuthField({
         onChange={(e) => onChange(e.target.value)}
         autoComplete={autoComplete}
         required={required}
+        minLength={minLength}
         className="w-full rounded-xl border border-muted-200 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted-400 focus:border-accent focus:ring-2 focus:ring-accent/20"
       />
     </div>

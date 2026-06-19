@@ -7,6 +7,8 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
+import { getSafeRedirectPath } from "@/lib/auth/safe-redirect";
+import { normalizeAuthEmail } from "@/lib/auth/password";
 import { formatAuthError } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -15,7 +17,7 @@ import { useEffect, useState } from "react";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") || "/decks";
+  const next = getSafeRedirectPath(searchParams.get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +39,7 @@ export default function LoginForm() {
     try {
       const supabase = createClient();
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
+        email: normalizeAuthEmail(email),
         password,
       });
 
@@ -46,7 +48,7 @@ export default function LoginForm() {
         return;
       }
 
-      window.location.href = next.startsWith("/") ? next : "/decks";
+      window.location.href = next;
     } catch (err) {
       setError(formatAuthError(err));
     } finally {

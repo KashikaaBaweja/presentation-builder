@@ -1,9 +1,12 @@
+import { applySecurityHeaders } from "@/lib/auth/security-headers";
+import { getSafeRedirectPath } from "@/lib/auth/safe-redirect";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAnonKey, getSupabaseUrl } from "./env";
 
 const PROTECTED_PREFIXES = ["/editor", "/decks", "/admin"];
 const AUTH_PAGES = ["/login", "/signup"];
+const API_AUTH_PREFIXES = ["/api/generate"];
 
 function isProtectedPath(pathname: string) {
   return PROTECTED_PREFIXES.some(
@@ -13,6 +16,28 @@ function isProtectedPath(pathname: string) {
 
 function isAuthPage(pathname: string) {
   return AUTH_PAGES.includes(pathname);
+}
+
+function isAuthRequiredApi(pathname: string) {
+  return API_AUTH_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
+
+function redirectWithSecurity(
+  request: NextRequest,
+  pathname: string,
+  searchParams?: Record<string, string>
+) {
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  url.search = "";
+  if (searchParams) {
+    for (const [key, value] of Object.entries(searchParams)) {
+      url.searchParams.set(key, value);
+    }
+  }
+  return applySecurityHeaders(NextResponse.redirect(url));
 }
 
 export async function updateSession(request: NextRequest) {
@@ -31,7 +56,11 @@ export async function updateSession(request: NextRequest) {
         supabaseResponse = NextResponse.next({ request });
 
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
+          supabaseResponse.cookies.set(name, value, {
+            ...options,
+            sameSite: options?.sameSite ?? "lax",
+            secure: options?.secure ?? process.env.NODE_ENV === "production",
+          })
         );
 
         if (headers) {
@@ -59,18 +88,32 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  if (isAuthRequiredApi(pathname) && !user) {
+    return applySecurityHeaders(
+      NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    );
+  }
+
   if (isProtectedPath(pathname) && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    return redirectWithSecurity(request, "/login", { next: pathname });
+  }
+
+  if (pathname.startsWith("/admin") && user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (profile?.role !== "admin") {
+      return redirectWithSecurity(request, "/");
+    }
   }
 
   if (isAuthPage(pathname) && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/decks";
-    return NextResponse.redirect(url);
+    const next = getSafeRedirectPath(request.nextUrl.searchParams.get("next"));
+    return redirectWithSecurity(request, next);
   }
 
-  return supabaseResponse;
+  return applySecurityHeaders(supabaseResponse);
 }

@@ -1,3 +1,4 @@
+import { checkRateLimit } from "@/lib/auth/rate-limit";
 import { initialContent } from "@/lib/initialContent";
 import { parseGeneratedContent } from "@/lib/generate/validateContent";
 import { createClient } from "@/lib/supabase/server";
@@ -7,6 +8,9 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
+const MAX_TOPIC_LENGTH = 500;
+const GENERATE_RATE_LIMIT = 20;
+const GENERATE_RATE_WINDOW_MS = 60 * 60 * 1000;
 
 const SYSTEM_PROMPT = `You are a presentation writer. Given a topic, produce slide deck content as JSON.
 
@@ -46,6 +50,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const rateLimit = checkRateLimit(
+    `generate:${user.id}`,
+    GENERATE_RATE_LIMIT,
+    GENERATE_RATE_WINDOW_MS
+  );
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many generation requests. Try again later." },
+      {
+        status: 429,
+        headers: rateLimit.retryAfterSeconds
+          ? { "Retry-After": String(rateLimit.retryAfterSeconds) }
+          : undefined,
+      }
+    );
+  }
+
   if (!process.env.GEMINI_API_KEY) {
     return NextResponse.json(
       { error: "Gemini API key is not configured" },
@@ -70,6 +91,13 @@ export async function POST(request: Request) {
 
   if (!topic) {
     return NextResponse.json({ error: "Topic is required" }, { status: 400 });
+  }
+
+  if (topic.length > MAX_TOPIC_LENGTH) {
+    return NextResponse.json(
+      { error: `Topic must be ${MAX_TOPIC_LENGTH} characters or fewer` },
+      { status: 400 }
+    );
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });

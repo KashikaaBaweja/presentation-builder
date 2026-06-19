@@ -7,6 +7,7 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
+import { MIN_PASSWORD_LENGTH, normalizeAuthEmail, validatePassword } from "@/lib/auth/password";
 import { formatAuthError, isSignupEmailFailure } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -33,10 +34,18 @@ export default function SignupForm() {
     setError(null);
     setMessage(null);
 
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
+      setLoading(false);
+      return;
+    }
+
     try {
       const supabase = createClient();
+      const normalizedEmail = normalizeAuthEmail(email);
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
+        email: normalizedEmail,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -46,7 +55,7 @@ export default function SignupForm() {
       if (signUpError) {
         if (isSignupEmailFailure(signUpError)) {
           const { data: signInData, error: signInError } =
-            await supabase.auth.signInWithPassword({ email, password });
+            await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
 
           if (signInData.session) {
             window.location.href = "/decks";
@@ -113,6 +122,7 @@ export default function SignupForm() {
           value={password}
           onChange={setPassword}
           autoComplete="new-password"
+          minLength={MIN_PASSWORD_LENGTH}
         />
         <AuthSubmit loading={loading}>
           {loading ? "Creating account…" : "Sign up"}
