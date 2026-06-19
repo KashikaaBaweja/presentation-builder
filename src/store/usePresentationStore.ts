@@ -31,7 +31,7 @@ interface PresentationActions {
     slideId: string,
     updater: (data: SlideDataMap[T]) => SlideDataMap[T]
   ) => void;
-  addSlide: (type: SlideType) => void;
+  addSlide: (type: SlideType, overrides?: Partial<SlideContent>) => void;
   removeSlide: (slideId: string) => void;
   setAccentColor: (color: string) => void;
   setTheme: (themeId: string) => void;
@@ -129,15 +129,20 @@ export const usePresentationStore = create<Store>()(
           };
         }),
 
-      addSlide: (type) => {
+      addSlide: (type, overrides) => {
         const id = createSlideId();
+        const data = {
+          ...createSlideData(type),
+          ...(overrides ?? {}),
+        } as SlideContent;
+
         set((state) => {
           const insertAt = state.currentSlide + 1;
           const slides = [...state.slides];
           slides.splice(insertAt, 0, { id, type });
           return {
             slides,
-            slideData: { ...state.slideData, [id]: createSlideData(type) },
+            slideData: { ...state.slideData, [id]: data },
             currentSlide: insertAt,
           };
         });

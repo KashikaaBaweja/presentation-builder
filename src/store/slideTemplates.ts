@@ -24,6 +24,8 @@ export function createSlideData<T extends SlideType>(type: T): SlideDataMap[T] {
       return structuredClone(source.team) as SlideDataMap[T];
     case "cta":
       return structuredClone(source.cta) as SlideDataMap[T];
+    case "custom":
+      return structuredClone(source.custom) as SlideDataMap[T];
   }
 }
 

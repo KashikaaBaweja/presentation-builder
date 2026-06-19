@@ -1,8 +1,11 @@
 "use client";
 
-import { SLIDE_TYPE_OPTIONS } from "@/slides";
+import {
+  CUSTOM_SLIDE_TYPE_OPTIONS,
+  TEMPLATE_SLIDE_TYPE_OPTIONS,
+} from "@/slides";
 import { usePresentationStore } from "@/store/usePresentationStore";
-import type { SlideType } from "@/store/types";
+import type { CustomLayout, SlideType } from "@/store/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function AddSlideMenu() {
@@ -11,9 +14,17 @@ export function AddSlideMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleAdd = useCallback(
+  const handleAddTemplate = useCallback(
     (type: SlideType) => {
       addSlide(type);
+      setOpen(false);
+    },
+    [addSlide]
+  );
+
+  const handleAddCustom = useCallback(
+    (layout: CustomLayout) => {
+      addSlide("custom", { layout });
       setOpen(false);
     },
     [addSlide]
@@ -42,21 +53,40 @@ export function AddSlideMenu() {
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-4 right-4 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-muted-200 bg-white py-1 shadow-xl">
+        <div className="absolute bottom-full left-4 right-4 z-50 mb-2 max-h-72 overflow-y-auto rounded-xl border border-muted-200 bg-white py-1 shadow-xl">
           <p className="px-3 py-2 text-xs font-medium text-muted-400">
-            Choose a themed layout
+            Themed templates
           </p>
-          {SLIDE_TYPE_OPTIONS.map(({ type, label }) => (
+          {TEMPLATE_SLIDE_TYPE_OPTIONS.map(({ type, label }) => (
             <button
               key={type}
               type="button"
-              onClick={() => handleAdd(type)}
+              onClick={() => handleAddTemplate(type)}
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-700 hover:bg-muted-50"
             >
               <span
                 className="h-2 w-2 shrink-0 rounded-full"
                 style={{ backgroundColor: accentColor }}
               />
+              {label}
+            </button>
+          ))}
+
+          <div className="my-1 border-t border-muted-100" />
+
+          <p className="px-3 py-2 text-xs font-medium text-muted-400">
+            Custom slides
+          </p>
+          {CUSTOM_SLIDE_TYPE_OPTIONS.map(({ label, layout }) => (
+            <button
+              key={layout}
+              type="button"
+              onClick={() => handleAddCustom(layout)}
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-700 hover:bg-muted-50"
+            >
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-muted-300 text-[10px] font-bold text-muted-500">
+                +
+              </span>
               {label}
             </button>
           ))}

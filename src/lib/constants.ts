@@ -15,6 +15,7 @@ export const SLIDE_TYPE_LABELS = {
   pricing: "Pricing",
   team: "Team",
   cta: "Call to Action",
+  custom: "Custom Slide",
 } as const;
 
 /** @deprecated Use SLIDE_TYPE_LABELS with dynamic slides */

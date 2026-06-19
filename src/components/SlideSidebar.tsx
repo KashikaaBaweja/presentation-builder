@@ -1,11 +1,12 @@
 "use client";
 
 import { AddSlideMenu } from "@/components/AddSlideMenu";
-import { getSlideLabel } from "@/slides";
+import { getSlideSidebarLabel } from "@/slides";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
 export function SlideSidebar() {
   const slides = usePresentationStore((s) => s.slides);
+  const slideData = usePresentationStore((s) => s.slideData);
   const currentSlide = usePresentationStore((s) => s.currentSlide);
   const setCurrentSlide = usePresentationStore((s) => s.setCurrentSlide);
   const removeSlide = usePresentationStore((s) => s.removeSlide);
@@ -48,7 +49,9 @@ export function SlideSidebar() {
                 >
                   {index + 1}
                 </span>
-                <span className="truncate">{getSlideLabel(slide.type)}</span>
+                <span className="truncate">
+                  {getSlideSidebarLabel(slide, slideData)}
+                </span>
               </button>
               {slides.length > 1 && (
                 <button

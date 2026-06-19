@@ -1,18 +1,25 @@
 import type {
   CoverLayout,
+  CustomLayout,
   FeaturesLayout,
   PricingLayout,
   SlideType,
   SolutionLayout,
 } from "@/store/types";
 
-export type LayoutSlideType = "cover" | "solution" | "features" | "pricing";
+export type LayoutSlideType =
+  | "cover"
+  | "solution"
+  | "features"
+  | "pricing"
+  | "custom";
 
 export const LAYOUT_SLIDE_TYPES: LayoutSlideType[] = [
   "cover",
   "solution",
   "features",
   "pricing",
+  "custom",
 ];
 
 export function isLayoutSlideType(type: SlideType): type is LayoutSlideType {
@@ -41,6 +48,11 @@ export const SLIDE_LAYOUT_OPTIONS: Record<LayoutSlideType, LayoutOption[]> = {
     { id: "default", label: "Cards" },
     { id: "table", label: "Table" },
   ],
+  custom: [
+    { id: "content", label: "Title & Text" },
+    { id: "bullets", label: "Bullets" },
+    { id: "split", label: "Two Column" },
+  ],
 };
 
 export function getLayoutOptions(type: LayoutSlideType): LayoutOption[] {
@@ -61,4 +73,8 @@ export function resolveFeaturesLayout(layout?: FeaturesLayout): FeaturesLayout {
 
 export function resolvePricingLayout(layout?: PricingLayout): PricingLayout {
   return layout ?? "default";
+}
+
+export function resolveCustomLayout(layout?: CustomLayout): CustomLayout {
+  return layout ?? "content";
 }

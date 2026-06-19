@@ -42,7 +42,10 @@ export type SlideType =
   | "testimonials"
   | "pricing"
   | "team"
-  | "cta";
+  | "cta"
+  | "custom";
+
+export type CustomLayout = "content" | "bullets" | "split";
 
 export type CoverLayout = "default" | "centered";
 export type SolutionLayout = "default" | "stacked";
@@ -107,6 +110,14 @@ export interface CtaData {
   buttonLabel: string;
 }
 
+export interface CustomData {
+  headline: string;
+  subheadline: string;
+  body: string;
+  bullets: string[];
+  layout?: CustomLayout;
+}
+
 export interface SlideDataMap {
   cover: CoverData;
   agenda: AgendaData;
@@ -118,6 +129,7 @@ export interface SlideDataMap {
   pricing: PricingData;
   team: TeamData;
   cta: CtaData;
+  custom: CustomData;
 }
 
 export type SlideContent = SlideDataMap[SlideType];

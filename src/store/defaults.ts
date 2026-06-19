@@ -2,6 +2,7 @@ import type {
   AgendaData,
   CoverData,
   CtaData,
+  CustomData,
   FeaturesData,
   HowItWorksData,
   PricingData,
@@ -183,4 +184,11 @@ export const defaultPresentationData = {
     website: "www.acmecorp.com",
     buttonLabel: "Start Free Trial",
   } satisfies CtaData,
+  custom: {
+    headline: "Your headline",
+    subheadline: "Optional subtitle",
+    body: "Add your main content here. Click any text to edit.",
+    bullets: ["First point", "Second point", "Third point"],
+    layout: "content",
+  } satisfies CustomData,
 };

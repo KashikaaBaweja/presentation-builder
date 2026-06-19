@@ -3,9 +3,11 @@
 import {
   getLayoutOptions,
   isLayoutSlideType,
+  resolveCustomLayout,
   type LayoutSlideType,
 } from "@/lib/layouts";
 import { usePresentationStore } from "@/store/usePresentationStore";
+import type { CustomLayout } from "@/store/types";
 import { useEffect, useRef, useState } from "react";
 
 function LayoutThumbnail({
@@ -103,38 +105,84 @@ function LayoutThumbnail({
     );
   }
 
-  if (layoutId === "table") {
+  if (slideType === "custom") {
+    if (layoutId === "bullets") {
+      return (
+        <div className="flex h-full flex-col gap-0.5 bg-muted-50 p-1.5">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex flex-1 items-center gap-1 px-0.5">
+              <span
+                className="h-1 w-1 shrink-0 rounded-full"
+                style={{ backgroundColor: accent }}
+              />
+              <span className="h-0.5 flex-1 rounded bg-muted-200" />
+            </div>
+          ))}
+        </div>
+      );
+    }
+    if (layoutId === "split") {
+      return (
+        <div className="flex h-full gap-1 bg-muted-50 p-1.5">
+          <div className="flex w-2/5 flex-col justify-center gap-1">
+            <span className="h-1 w-full rounded bg-muted-300" />
+            <span className="h-0.5 w-2/3 rounded bg-muted-200" />
+          </div>
+          <div className="flex w-3/5 flex-col justify-center gap-1">
+            <span className="h-0.5 w-full rounded bg-muted-200" />
+            <span className="h-0.5 w-full rounded bg-muted-200" />
+            <span className="h-0.5 w-4/5 rounded bg-muted-200" />
+          </div>
+        </div>
+      );
+    }
     return (
-      <div className="grid h-full grid-cols-4 gap-px bg-muted-200 p-1.5">
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+      <div className="flex h-full flex-col justify-center gap-1 bg-muted-50 p-1.5">
+        <span className="h-1 w-6 rounded bg-muted-300" />
+        <span className="h-0.5 w-4 rounded" style={{ backgroundColor: accent }} />
+        <span className="h-0.5 w-8 rounded bg-muted-200" />
+      </div>
+    );
+  }
+
+  if (slideType === "pricing") {
+    if (layoutId === "table") {
+      return (
+        <div className="grid h-full grid-cols-4 gap-px bg-muted-200 p-1.5">
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <div
+              key={i}
+              className={`bg-white ${i < 4 ? "h-2" : "h-1.5"}`}
+              style={i > 0 && i < 4 ? { borderBottom: `1px solid ${accent}` } : undefined}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid h-full grid-cols-3 gap-1 bg-muted-50 p-1.5">
+        {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className={`bg-white ${i < 4 ? "h-2" : "h-1.5"}`}
-            style={i > 0 && i < 4 ? { borderBottom: `1px solid ${accent}` } : undefined}
-          />
+            className="rounded bg-white p-1"
+            style={i === 1 ? { boxShadow: `inset 0 0 0 1px ${accent}` } : undefined}
+          >
+            <span className="block h-0.5 w-3 rounded bg-muted-300" />
+            <span
+              className="mt-1 block h-1 w-2 rounded"
+              style={{ color: accent, fontSize: 6 }}
+            >
+              $
+            </span>
+          </div>
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid h-full grid-cols-3 gap-1 bg-muted-50 p-1.5">
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          className="rounded bg-white p-1"
-          style={i === 1 ? { boxShadow: `inset 0 0 0 1px ${accent}` } : undefined}
-        >
-          <span className="block h-0.5 w-3 rounded bg-muted-300" />
-          <span
-            className="mt-1 block h-1 w-2 rounded"
-            style={{ color: accent, fontSize: 6 }}
-          >
-            $
-          </span>
-        </div>
-      ))}
-    </div>
+    <div className="h-full rounded bg-muted-100" />
   );
 }
 
@@ -166,7 +214,10 @@ export function LayoutPicker() {
 
   const slideType = active.type;
   const data = slideData[active.id] as { layout?: string } | undefined;
-  const currentLayout = data?.layout ?? "default";
+  const currentLayout =
+    slideType === "custom"
+      ? resolveCustomLayout(data?.layout as CustomLayout | undefined)
+      : (data?.layout ?? "default");
   const options = getLayoutOptions(slideType);
 
   const selectLayout = (layoutId: string) => {
