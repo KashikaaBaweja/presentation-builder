@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: "Presentation Builder — Build & Export Decks Instantly",
   description:
     "Create a polished 10-slide presentation online — inline editing, AI-generated content, custom themes, and pixel-accurate PDF export in minutes.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({

@@ -1,6 +1,7 @@
 "use client";
 
 import { AccountMenu } from "@/components/AccountMenu";
+import { AppLogo } from "@/components/AppLogo";
 import { GenerateTopicModal } from "@/components/GenerateTopicModal";
 import { ThemePicker } from "@/components/ThemePicker";
 import { saveDeckForUser } from "@/lib/decks/decks";
@@ -109,12 +110,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
       />
       <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
       <div className="flex items-center gap-3">
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-xl text-white text-sm font-bold"
-          style={{ backgroundColor: accentColor }}
-        >
-          PB
-        </div>
+        <AppLogo size={36} />
         <div>
           <h1 className="text-sm font-semibold text-muted-900">
             Presentation Builder

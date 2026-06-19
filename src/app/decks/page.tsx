@@ -1,4 +1,5 @@
 import { AccountMenu } from "@/components/AccountMenu";
+import { AppLogo } from "@/components/AppLogo";
 import { listDecksForUser } from "@/lib/decks/decks";
 import { formatDeckUpdatedAt, UNTITLED_DECK } from "@/lib/decks/utils";
 import { createClient } from "@/lib/supabase/server";
@@ -30,9 +31,7 @@ export default async function DecksPage() {
     <div className="min-h-full bg-paper">
       <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-sm font-bold text-white">
-            PB
-          </div>
+          <AppLogo size={36} />
           <h1 className="font-heading text-sm font-semibold text-ink">
             My Decks
           </h1>

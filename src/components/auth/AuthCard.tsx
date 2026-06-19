@@ -1,3 +1,4 @@
+import { AppLogo } from "@/components/AppLogo";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -12,9 +13,7 @@ export function AuthCard({ title, subtitle, children, footer }: AuthCardProps) {
   return (
     <div className="flex min-h-full flex-col items-center justify-center bg-paper px-4 py-12">
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-sm font-bold text-white">
-          PB
-        </div>
+        <AppLogo size={40} />
         <span className="font-heading text-lg font-semibold text-ink">
           Presentation Builder
         </span>
