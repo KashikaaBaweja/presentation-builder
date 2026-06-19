@@ -3,6 +3,7 @@
 import { AccountMenu } from "@/components/AccountMenu";
 import { AppLogo } from "@/components/AppLogo";
 import { GenerateTopicModal } from "@/components/GenerateTopicModal";
+import { LayoutPicker } from "@/components/LayoutPicker";
 import { ThemePicker } from "@/components/ThemePicker";
 import { saveDeckForUser } from "@/lib/decks/decks";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
@@ -130,6 +131,7 @@ export function Toolbar({
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <ThemePicker />
+          <LayoutPicker />
           <input
             type="color"
             value={accentColor}

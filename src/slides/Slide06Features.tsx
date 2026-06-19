@@ -2,6 +2,7 @@
 
 import { EditableText } from "@/components/EditableText";
 import { SlideFrame } from "@/components/SlideFrame";
+import { resolveFeaturesLayout } from "@/lib/layouts";
 import { useSlideData } from "@/hooks/useSlideData";
 import { usePresentationStore } from "@/store/usePresentationStore";
 
@@ -11,6 +12,7 @@ export function Slide06Features() {
   const { data, update } = useSlideData("features");
   const accentColor = usePresentationStore((s) => s.accentColor);
   const showLogo = usePresentationStore((s) => s.showLogoOnAllSlides);
+  const layout = resolveFeaturesLayout(data.layout);
 
   return (
     <SlideFrame variant="light" showLogo={showLogo}>
@@ -23,45 +25,89 @@ export function Slide06Features() {
           as="h2"
         />
 
-        <div className="grid flex-1 grid-cols-3 grid-rows-2 gap-6">
-          {data.items.map((item, i) => (
-            <div
-              key={i}
-              className="flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-muted-100"
-            >
-              <span className="mb-4 text-2xl" style={{ color: accentColor }}>
-                {FEATURE_ICONS[i]}
-              </span>
-              <EditableText
-                value={item.title}
-                onChange={(title) =>
-                  update((d) => {
-                    const items = [...d.items];
-                    items[i] = { ...items[i], title };
-                    return { ...d, items };
-                  })
-                }
-                placeholder="Feature title"
-                className="font-heading mb-2 text-lg font-bold text-muted-900"
-                as="h3"
-              />
-              <EditableText
-                value={item.description}
-                onChange={(description) =>
-                  update((d) => {
-                    const items = [...d.items];
-                    items[i] = { ...items[i], description };
-                    return { ...d, items };
-                  })
-                }
-                placeholder="Feature description"
-                className="text-sm leading-relaxed text-muted-600"
-                multiline
-                as="p"
-              />
-            </div>
-          ))}
-        </div>
+        {layout === "list" ? (
+          <div className="flex flex-1 flex-col justify-center gap-0 divide-y divide-muted-100">
+            {data.items.map((item, i) => (
+              <div key={i} className="flex items-start gap-5 py-4">
+                <span
+                  className="font-heading shrink-0 text-2xl font-bold tabular-nums"
+                  style={{ color: accentColor }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <EditableText
+                    value={item.title}
+                    onChange={(title) =>
+                      update((d) => {
+                        const items = [...d.items];
+                        items[i] = { ...items[i], title };
+                        return { ...d, items };
+                      })
+                    }
+                    placeholder="Feature title"
+                    className="font-heading mb-1 text-xl font-bold text-muted-900"
+                    as="h3"
+                  />
+                  <EditableText
+                    value={item.description}
+                    onChange={(description) =>
+                      update((d) => {
+                        const items = [...d.items];
+                        items[i] = { ...items[i], description };
+                        return { ...d, items };
+                      })
+                    }
+                    placeholder="Feature description"
+                    className="text-sm leading-relaxed text-muted-600"
+                    multiline
+                    as="p"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid flex-1 grid-cols-3 grid-rows-2 gap-6">
+            {data.items.map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-muted-100"
+              >
+                <span className="mb-4 text-2xl" style={{ color: accentColor }}>
+                  {FEATURE_ICONS[i]}
+                </span>
+                <EditableText
+                  value={item.title}
+                  onChange={(title) =>
+                    update((d) => {
+                      const items = [...d.items];
+                      items[i] = { ...items[i], title };
+                      return { ...d, items };
+                    })
+                  }
+                  placeholder="Feature title"
+                  className="font-heading mb-2 text-lg font-bold text-muted-900"
+                  as="h3"
+                />
+                <EditableText
+                  value={item.description}
+                  onChange={(description) =>
+                    update((d) => {
+                      const items = [...d.items];
+                      items[i] = { ...items[i], description };
+                      return { ...d, items };
+                    })
+                  }
+                  placeholder="Feature description"
+                  className="text-sm leading-relaxed text-muted-600"
+                  multiline
+                  as="p"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </SlideFrame>
   );

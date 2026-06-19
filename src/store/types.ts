@@ -44,11 +44,17 @@ export type SlideType =
   | "team"
   | "cta";
 
+export type CoverLayout = "default" | "centered";
+export type SolutionLayout = "default" | "stacked";
+export type FeaturesLayout = "default" | "list";
+export type PricingLayout = "default" | "table";
+
 export interface CoverData {
   company: string;
   title: string;
   tagline: string;
   date: string;
+  layout?: CoverLayout;
 }
 
 export interface AgendaData {
@@ -63,6 +69,7 @@ export interface ProblemData {
 export interface SolutionData {
   headline: string;
   cards: SolutionCard[];
+  layout?: SolutionLayout;
 }
 
 export interface HowItWorksData {
@@ -73,6 +80,7 @@ export interface HowItWorksData {
 export interface FeaturesData {
   headline: string;
   items: FeatureItem[];
+  layout?: FeaturesLayout;
 }
 
 export interface TestimonialsData {
@@ -83,6 +91,7 @@ export interface TestimonialsData {
 export interface PricingData {
   headline: string;
   plans: PricingPlan[];
+  layout?: PricingLayout;
 }
 
 export interface TeamData {

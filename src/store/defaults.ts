@@ -18,6 +18,7 @@ export const defaultPresentationData = {
     title: "Product Launch Presentation",
     tagline: "Transforming the way teams collaborate and deliver",
     date: "June 2026",
+    layout: "default",
   } satisfies CoverData,
   agenda: {
     items: [
@@ -39,6 +40,7 @@ export const defaultPresentationData = {
   } satisfies ProblemData,
   solution: {
     headline: "One platform. Every workflow.",
+    layout: "default",
     cards: [
       {
         title: "Unified Workspace",
@@ -79,6 +81,7 @@ export const defaultPresentationData = {
   } satisfies HowItWorksData,
   features: {
     headline: "Everything you need to succeed",
+    layout: "default",
     items: [
       {
         title: "Collaborative Editing",
@@ -127,6 +130,7 @@ export const defaultPresentationData = {
   } satisfies TestimonialsData,
   pricing: {
     headline: "Simple, transparent pricing",
+    layout: "default",
     plans: [
       {
         name: "Starter",

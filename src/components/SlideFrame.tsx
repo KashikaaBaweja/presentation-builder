@@ -9,6 +9,7 @@ interface SlideFrameProps {
   variant?: "dark" | "light";
   className?: string;
   showLogo?: boolean;
+  plain?: boolean;
   id?: string;
 }
 
@@ -17,6 +18,7 @@ export function SlideFrame({
   variant = "light",
   className = "",
   showLogo = false,
+  plain = false,
   id,
 }: SlideFrameProps) {
   const accentColor = usePresentationStore((s) => s.accentColor);
@@ -34,7 +36,7 @@ export function SlideFrame({
       }}
       data-variant={variant}
     >
-      {variant === "dark" && (
+      {variant === "dark" && !plain && (
         <>
           <div
             className="absolute inset-0"
@@ -53,8 +55,16 @@ export function SlideFrame({
         </>
       )}
 
-      {variant === "light" && (
+      {variant === "dark" && plain && (
+        <div className="absolute inset-0 bg-slate-900" />
+      )}
+
+      {variant === "light" && !plain && (
         <div className="absolute inset-0 bg-gradient-to-br from-muted-50 to-white" />
+      )}
+
+      {variant === "light" && plain && (
+        <div className="absolute inset-0 bg-white" />
       )}
 
       {showLogo && logoUrl && (
