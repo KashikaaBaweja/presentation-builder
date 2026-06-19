@@ -33,6 +33,7 @@ interface PresentationActions {
   ) => void;
   addSlide: (type: SlideType, overrides?: Partial<SlideContent>) => void;
   removeSlide: (slideId: string) => void;
+  reorderSlides: (fromIndex: number, toIndex: number) => void;
   setAccentColor: (color: string) => void;
   setTheme: (themeId: string) => void;
   setLogoUrl: (url: string | null) => void;
@@ -168,6 +169,35 @@ export const usePresentationStore = create<Store>()(
           }
 
           return { slides, slideData, currentSlide };
+        });
+      },
+
+      reorderSlides: (fromIndex, toIndex) => {
+        set((state) => {
+          if (fromIndex === toIndex) return state;
+          if (
+            fromIndex < 0 ||
+            toIndex < 0 ||
+            fromIndex >= state.slides.length ||
+            toIndex >= state.slides.length
+          ) {
+            return state;
+          }
+
+          const slides = [...state.slides];
+          const [moved] = slides.splice(fromIndex, 1);
+          slides.splice(toIndex, 0, moved);
+
+          let currentSlide = state.currentSlide;
+          if (currentSlide === fromIndex) {
+            currentSlide = toIndex;
+          } else if (fromIndex < currentSlide && toIndex >= currentSlide) {
+            currentSlide -= 1;
+          } else if (fromIndex > currentSlide && toIndex <= currentSlide) {
+            currentSlide += 1;
+          }
+
+          return { slides, currentSlide };
         });
       },
 

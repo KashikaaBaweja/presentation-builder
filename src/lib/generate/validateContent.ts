@@ -1,8 +1,9 @@
 import type { InitialContent } from "@/lib/initialContent";
 import { initialContent } from "@/lib/initialContent";
-import type { SlideType } from "@/store/types";
 
-const SLIDE_TYPES = Object.keys(initialContent) as SlideType[];
+type GeneratedSlideType = keyof InitialContent;
+
+const SLIDE_TYPES = Object.keys(initialContent) as GeneratedSlideType[];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -133,7 +134,7 @@ function validateCta(value: unknown): boolean {
   );
 }
 
-const validators: Record<SlideType, (value: unknown) => boolean> = {
+const validators: Record<GeneratedSlideType, (value: unknown) => boolean> = {
   cover: validateCover,
   agenda: validateAgenda,
   problem: validateProblem,
