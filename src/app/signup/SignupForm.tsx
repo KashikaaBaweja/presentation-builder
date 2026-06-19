@@ -7,6 +7,7 @@ import {
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
+import { formatAuthError } from "@/lib/supabase/auth-errors";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -24,30 +25,34 @@ export default function SignupForm() {
     setError(null);
     setMessage(null);
 
-    const { createClient } = await import("@/lib/supabase/client");
-    const supabase = createClient();
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
 
-    if (signUpError) {
-      setError(signUpError.message);
+      if (signUpError) {
+        setError(formatAuthError(signUpError));
+        return;
+      }
+
+      if (data.session) {
+        router.push("/decks");
+        router.refresh();
+        return;
+      }
+
+      setMessage("Check your email to confirm your account, then sign in.");
+    } catch (err) {
+      setError(formatAuthError(err));
+    } finally {
       setLoading(false);
-      return;
     }
-
-    if (data.session) {
-      router.push("/decks");
-      router.refresh();
-      return;
-    }
-
-    setMessage("Check your email to confirm your account, then sign in.");
-    setLoading(false);
   }
 
   return (
