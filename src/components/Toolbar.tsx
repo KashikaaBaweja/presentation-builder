@@ -11,7 +11,15 @@ import { usePresentationStore } from "@/store/usePresentationStore";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 
-export function Toolbar({ userEmail }: { userEmail: string }) {
+export function Toolbar({
+  userEmail,
+  isAdmin = false,
+  readOnlyDeck = false,
+}: {
+  userEmail: string;
+  isAdmin?: boolean;
+  readOnlyDeck?: boolean;
+}) {
   const router = useRouter();
   const accentColor = usePresentationStore((s) => s.accentColor);
   const setAccentColor = usePresentationStore((s) => s.setAccentColor);
@@ -68,7 +76,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
   }, [setIsExporting]);
 
   const handleSave = useCallback(async () => {
-    if (!userEmail) return;
+    if (!userEmail || readOnlyDeck) return;
 
     setIsSaving(true);
     try {
@@ -100,7 +108,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
     } finally {
       setIsSaving(false);
     }
-  }, [deckId, getSavePayload, router, setDeckId, setIsSaving, userEmail]);
+  }, [deckId, getSavePayload, readOnlyDeck, router, setDeckId, setIsSaving, userEmail]);
 
   return (
     <>
@@ -192,7 +200,12 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
           <button
             type="button"
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={isSaving || readOnlyDeck}
+            title={
+              readOnlyDeck
+                ? "Saving is disabled while viewing another user's deck"
+                : undefined
+            }
             className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50 disabled:opacity-60"
           >
             {isSaving ? "Saving…" : "Save"}
@@ -212,7 +225,7 @@ export function Toolbar({ userEmail }: { userEmail: string }) {
         {userEmail && (
           <>
             <div className="h-6 w-px bg-muted-200" />
-            <AccountMenu email={userEmail} />
+            <AccountMenu email={userEmail} isAdmin={isAdmin} />
           </>
         )}
       </div>

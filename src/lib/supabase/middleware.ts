@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAnonKey, getSupabaseUrl } from "./env";
 
-const PROTECTED_PREFIXES = ["/editor", "/decks"];
+const PROTECTED_PREFIXES = ["/editor", "/decks", "/admin"];
 const AUTH_PAGES = ["/login", "/signup"];
 
 function isProtectedPath(pathname: string) {

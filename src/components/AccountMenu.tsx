@@ -1,8 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-export function AccountMenu({ email }: { email: string }) {
+export function AccountMenu({
+  email,
+  isAdmin = false,
+}: {
+  email: string;
+  isAdmin?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +49,16 @@ export function AccountMenu({ email }: { email: string }) {
         >
           <p className="truncate px-3 py-2 text-xs text-muted-400">{email}</p>
           <div className="my-1 border-t border-muted-100" />
+          {isAdmin && (
+            <Link
+              href="/admin"
+              role="menuitem"
+              className="block px-3 py-2 text-sm text-muted-700 hover:bg-muted-50"
+              onClick={() => setOpen(false)}
+            >
+              Admin
+            </Link>
+          )}
           <form action="/auth/logout" method="post">
             <button
               type="submit"

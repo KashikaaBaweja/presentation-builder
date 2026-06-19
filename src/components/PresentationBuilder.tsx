@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminViewBanner } from "@/components/AdminViewBanner";
 import { DeckHydrator } from "@/components/DeckHydrator";
 import { PdfExportContainer, SlidePreview } from "@/components/PresentationEditor";
 import { SlideControls } from "@/components/SlideControls";
@@ -20,9 +21,13 @@ function useIsClient() {
 export function PresentationBuilder({
   userEmail,
   deckId,
+  isAdmin = false,
+  readOnlyDeck = false,
 }: {
   userEmail: string;
   deckId: string | null;
+  isAdmin?: boolean;
+  readOnlyDeck?: boolean;
 }) {
   const isClient = useIsClient();
   const isExporting = usePresentationStore((s) => s.isExporting);
@@ -39,7 +44,12 @@ export function PresentationBuilder({
     <DeckHydrator deckId={deckId}>
       <ThemeSync />
       <div className="flex h-screen flex-col bg-muted-50">
-        <Toolbar userEmail={userEmail} />
+        {readOnlyDeck && <AdminViewBanner />}
+        <Toolbar
+          userEmail={userEmail}
+          isAdmin={isAdmin}
+          readOnlyDeck={readOnlyDeck}
+        />
         <div className="flex flex-1 overflow-hidden">
           <SlideSidebar />
           <div className="flex flex-1 flex-col overflow-hidden">

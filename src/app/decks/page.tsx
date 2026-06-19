@@ -2,6 +2,7 @@ import { AccountMenu } from "@/components/AccountMenu";
 import { AppLogo } from "@/components/AppLogo";
 import { listDecksForUser } from "@/lib/decks/decks";
 import { formatDeckUpdatedAt, UNTITLED_DECK } from "@/lib/decks/utils";
+import { getCurrentUserProfile, isAdmin } from "@/lib/profile";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
@@ -14,6 +15,8 @@ export default async function DecksPage() {
   } = await supabase.auth.getUser();
 
   const email = user?.email ?? "";
+  const profile = user ? await getCurrentUserProfile(supabase) : null;
+  const userIsAdmin = isAdmin(profile);
   let decks: Awaited<ReturnType<typeof listDecksForUser>> = [];
   let loadError: string | null = null;
 
@@ -36,7 +39,7 @@ export default async function DecksPage() {
             My Decks
           </h1>
         </div>
-        {email && <AccountMenu email={email} />}
+        {email && <AccountMenu email={email} isAdmin={userIsAdmin} />}
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-12">
