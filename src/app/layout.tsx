@@ -15,9 +15,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Presentation Builder",
+  title: "Presentation Builder — Build & Export Decks Instantly",
   description:
-    "Create beautiful 10-slide presentations with inline editing and high-fidelity PDF export.",
+    "Create a polished 10-slide presentation online — inline editing, AI-generated content, custom themes, and pixel-accurate PDF export in minutes.",
 };
 
 export default function RootLayout({
