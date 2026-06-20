@@ -19,6 +19,7 @@ function DragHandle({
       draggable
       role="button"
       tabIndex={0}
+      title="Drag to reorder"
       aria-label={`Drag slide ${index + 1} to reorder`}
       onDragStart={(e) => {
         onDragStart(index);
@@ -27,12 +28,23 @@ function DragHandle({
         e.dataTransfer.setData("application/x-slide-index", String(index));
       }}
       onDragEnd={onDragEnd}
-      className="flex shrink-0 cursor-grab select-none flex-col items-center justify-center gap-0.5 rounded-md px-1.5 py-2 text-muted-400 transition-colors hover:bg-muted-100 hover:text-muted-600 active:cursor-grabbing"
+      className="flex shrink-0 cursor-grab select-none items-center justify-center rounded-md px-1 py-2 text-muted-400 transition-colors hover:bg-muted-100 hover:text-muted-600 active:cursor-grabbing"
       style={{ WebkitUserDrag: "element" } as React.CSSProperties}
     >
-      <span className="block h-0.5 w-2.5 rounded-full bg-current" />
-      <span className="block h-0.5 w-2.5 rounded-full bg-current" />
-      <span className="block h-0.5 w-2.5 rounded-full bg-current" />
+      <svg
+        width="10"
+        height="14"
+        viewBox="0 0 10 14"
+        fill="currentColor"
+        aria-hidden
+      >
+        <circle cx="2.5" cy="2.5" r="1.2" />
+        <circle cx="7.5" cy="2.5" r="1.2" />
+        <circle cx="2.5" cy="7" r="1.2" />
+        <circle cx="7.5" cy="7" r="1.2" />
+        <circle cx="2.5" cy="11.5" r="1.2" />
+        <circle cx="7.5" cy="11.5" r="1.2" />
+      </svg>
     </div>
   );
 }
@@ -121,9 +133,12 @@ export function SlideSidebar({
           Slides
         </h2>
         {canManageSlides ? (
-          <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
-            Drag the grip, or use ▲▼ to reorder. Works in Safari too.
-          </p>
+          <div className="mb-3 rounded-lg border border-muted-200 bg-muted-50 px-2.5 py-2 text-[11px] leading-snug text-muted-500">
+            <p className="font-medium text-muted-700">Reorder slides</p>
+            <p className="mt-0.5">
+              Drag the six-dot grip, or tap ▲▼ on each slide.
+            </p>
+          </div>
         ) : (
           <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
             Select a slide to edit its text.
@@ -215,7 +230,7 @@ export function SlideSidebar({
                     {getSlideSidebarLabel(slide, slideData)}
                   </span>
                 </button>
-                {canManageSlides && slides.length > 1 && (
+                {canManageSlides && (
                   <ReorderButtons
                     index={index}
                     total={slides.length}
