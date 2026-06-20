@@ -17,6 +17,14 @@ import {
   getDefaultTheme,
   getThemeById,
 } from "@/lib/themes";
+import {
+  DEFAULT_FONT_ID,
+  DEFAULT_TEXT_SIZE_ID,
+  parseFontId,
+  parseTextSizeId,
+  type FontId,
+  type TextSizeId,
+} from "@/lib/typography";
 import { createInitialDeck } from "./initialDeck";
 import { createSlideData, createSlideId } from "./slideTemplates";
 import type { SlideContent, SlideDataMap, SlideType } from "./types";
@@ -36,6 +44,8 @@ interface PresentationActions {
   reorderSlides: (fromIndex: number, toIndex: number) => void;
   setAccentColor: (color: string) => void;
   setTheme: (themeId: string) => void;
+  setFontId: (fontId: FontId) => void;
+  setTextSizeId: (textSizeId: TextSizeId) => void;
   setLogoUrl: (url: string | null) => void;
   setShowLogoOnAllSlides: (show: boolean) => void;
   setIsExporting: (exporting: boolean) => void;
@@ -56,6 +66,8 @@ type Store = typeof initialDeck & {
   inkColor: string;
   paperColor: string;
   themeId: string;
+  fontId: FontId;
+  textSizeId: TextSizeId;
   logoUrl: string | null;
   showLogoOnAllSlides: boolean;
   isExporting: boolean;
@@ -94,6 +106,8 @@ export const usePresentationStore = create<Store>()(
       inkColor: DEFAULT_INK,
       paperColor: DEFAULT_PAPER,
       themeId: DEFAULT_THEME_ID,
+      fontId: DEFAULT_FONT_ID,
+      textSizeId: DEFAULT_TEXT_SIZE_ID,
       logoUrl: null,
       showLogoOnAllSlides: false,
       isExporting: false,
@@ -215,6 +229,10 @@ export const usePresentationStore = create<Store>()(
         });
       },
 
+      setFontId: (fontId) => set({ fontId }),
+
+      setTextSizeId: (textSizeId) => set({ textSizeId }),
+
       setLogoUrl: (url) => set({ logoUrl: url }),
 
       setShowLogoOnAllSlides: (show) => set({ showLogoOnAllSlides: show }),
@@ -231,6 +249,8 @@ export const usePresentationStore = create<Store>()(
           inkColor: defaultTheme.ink,
           paperColor: defaultTheme.paper,
           themeId: defaultTheme.id,
+          fontId: DEFAULT_FONT_ID,
+          textSizeId: DEFAULT_TEXT_SIZE_ID,
           logoUrl: null,
           showLogoOnAllSlides: false,
           deckId: get().deckId,
@@ -260,6 +280,8 @@ export const usePresentationStore = create<Store>()(
             inkColor: preset.ink,
             paperColor: preset.paper,
             themeId: preset.id,
+            fontId: parseFontId(deck.content.fontId),
+            textSizeId: parseTextSizeId(deck.content.textSizeId),
             logoUrl: deck.logo,
             showLogoOnAllSlides: deck.content.showLogoOnAllSlides ?? false,
             deckId: deck.id,
@@ -276,6 +298,8 @@ export const usePresentationStore = create<Store>()(
           inkColor: deck.content.ink ?? DEFAULT_INK,
           paperColor: deck.content.paper ?? DEFAULT_PAPER,
           themeId: CUSTOM_THEME_ID,
+          fontId: parseFontId(deck.content.fontId),
+          textSizeId: parseTextSizeId(deck.content.textSizeId),
           logoUrl: deck.logo,
           showLogoOnAllSlides: deck.content.showLogoOnAllSlides ?? false,
           deckId: deck.id,
@@ -293,6 +317,8 @@ export const usePresentationStore = create<Store>()(
           inkColor: defaultTheme.ink,
           paperColor: defaultTheme.paper,
           themeId: defaultTheme.id,
+          fontId: DEFAULT_FONT_ID,
+          textSizeId: DEFAULT_TEXT_SIZE_ID,
           logoUrl: null,
           showLogoOnAllSlides: false,
           deckId: null,
@@ -310,6 +336,8 @@ export const usePresentationStore = create<Store>()(
             showLogoOnAllSlides: state.showLogoOnAllSlides,
             ink: state.inkColor,
             paper: state.paperColor,
+            fontId: state.fontId,
+            textSizeId: state.textSizeId,
           },
           theme_id:
             state.themeId === CUSTOM_THEME_ID ? null : state.themeId,
@@ -352,6 +380,8 @@ export const usePresentationStore = create<Store>()(
         inkColor: state.inkColor,
         paperColor: state.paperColor,
         themeId: state.themeId,
+        fontId: state.fontId,
+        textSizeId: state.textSizeId,
         logoUrl: state.logoUrl,
         showLogoOnAllSlides: state.showLogoOnAllSlides,
       }),
@@ -368,6 +398,8 @@ export const usePresentationStore = create<Store>()(
           inkColor: saved.inkColor ?? defaultTheme.ink,
           paperColor: saved.paperColor ?? defaultTheme.paper,
           themeId: saved.themeId ?? defaultTheme.id,
+          fontId: parseFontId(saved.fontId),
+          textSizeId: parseTextSizeId(saved.textSizeId),
           currentSlide: clampSlideIndex(current.currentSlide, slides.length),
         };
       },

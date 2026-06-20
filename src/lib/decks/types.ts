@@ -6,6 +6,8 @@ export interface DeckContent {
   showLogoOnAllSlides: boolean;
   ink?: string;
   paper?: string;
+  fontId?: string;
+  textSizeId?: string;
 }
 
 export interface DeckRow {

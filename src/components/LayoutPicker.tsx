@@ -186,7 +186,7 @@ function LayoutThumbnail({
   );
 }
 
-export function LayoutPicker() {
+export function LayoutPicker({ variant = "default" }: { variant?: "default" | "toolbar" }) {
   const slides = usePresentationStore((s) => s.slides);
   const currentSlide = usePresentationStore((s) => s.currentSlide);
   const slideData = usePresentationStore((s) => s.slideData);
@@ -194,6 +194,15 @@ export function LayoutPicker() {
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const buttonClass =
+    variant === "toolbar"
+      ? "inline-flex h-8 shrink-0 items-center rounded-md px-2.5 text-xs font-medium text-muted-600 transition-colors hover:bg-muted-50 hover:text-muted-900 disabled:cursor-not-allowed disabled:opacity-50"
+      : "rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-600 transition-colors hover:bg-muted-50";
+  const disabledClass =
+    variant === "toolbar"
+      ? "inline-flex h-8 shrink-0 cursor-not-allowed items-center rounded-md px-2.5 text-xs font-medium text-muted-400 opacity-60"
+      : "shrink-0 cursor-not-allowed rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-400 opacity-60";
 
   const active = slides[currentSlide];
 
@@ -214,7 +223,7 @@ export function LayoutPicker() {
         type="button"
         disabled
         title="Layout options appear on Cover, Solution, Features, Pricing, and Custom slides"
-        className="shrink-0 cursor-not-allowed rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-400 opacity-60"
+        className={disabledClass}
       >
         Layout
       </button>
@@ -241,7 +250,7 @@ export function LayoutPicker() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="rounded-lg border border-muted-200 px-2.5 py-1.5 text-xs font-medium text-muted-600 transition-colors hover:bg-muted-50"
+        className={buttonClass}
         aria-expanded={open}
         aria-haspopup="listbox"
         title="Change layout for this slide"

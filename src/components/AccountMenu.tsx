@@ -56,7 +56,7 @@ export function AccountMenu({
               className="block px-3 py-2 text-sm text-muted-700 hover:bg-muted-50"
               onClick={() => setOpen(false)}
             >
-              Admin
+              Admin dashboard
             </Link>
           )}
           <form action="/auth/logout" method="post">

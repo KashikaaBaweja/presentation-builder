@@ -1,4 +1,5 @@
 import { AccountMenu } from "@/components/AccountMenu";
+import { AdminHeaderLink } from "@/components/admin/AdminHeaderLink";
 import { AppLogo } from "@/components/AppLogo";
 import { listDecksForUser } from "@/lib/decks/decks";
 import { formatDeckUpdatedAt, UNTITLED_DECK } from "@/lib/decks/utils";
@@ -39,7 +40,12 @@ export default async function DecksPage() {
             My Decks
           </h1>
         </div>
-        {email && <AccountMenu email={email} isAdmin={userIsAdmin} />}
+        {email && (
+          <div className="flex items-center gap-3">
+            {userIsAdmin && <AdminHeaderLink />}
+            <AccountMenu email={email} isAdmin={userIsAdmin} />
+          </div>
+        )}
       </header>
 
       <main className="mx-auto max-w-3xl px-6 py-12">

@@ -1,6 +1,10 @@
 "use client";
 
 import { SLIDE_HEIGHT, SLIDE_WIDTH } from "@/lib/constants";
+import {
+  resolveFontStacks,
+  resolveTextSizeBasePx,
+} from "@/lib/typography";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import type { ReactNode } from "react";
 
@@ -23,6 +27,10 @@ export function SlideFrame({
 }: SlideFrameProps) {
   const accentColor = usePresentationStore((s) => s.accentColor);
   const logoUrl = usePresentationStore((s) => s.logoUrl);
+  const fontId = usePresentationStore((s) => s.fontId);
+  const textSizeId = usePresentationStore((s) => s.textSizeId);
+  const fonts = resolveFontStacks(fontId);
+  const baseFontSize = resolveTextSizeBasePx(textSizeId);
 
   return (
     <div
@@ -31,7 +39,10 @@ export function SlideFrame({
       style={{
         width: SLIDE_WIDTH,
         height: SLIDE_HEIGHT,
-        fontFamily: "var(--font-body)",
+        fontSize: baseFontSize,
+        fontFamily: fonts.body,
+        ["--font-heading" as string]: fonts.heading,
+        ["--font-body" as string]: fonts.body,
         ["--accent" as string]: accentColor,
       }}
       data-variant={variant}

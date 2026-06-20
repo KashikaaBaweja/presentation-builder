@@ -3,14 +3,16 @@
 import { AccountMenu } from "@/components/AccountMenu";
 import { AppLogo } from "@/components/AppLogo";
 import { GenerateTopicModal } from "@/components/GenerateTopicModal";
-import { LayoutPicker } from "@/components/LayoutPicker";
-import { ThemePicker } from "@/components/ThemePicker";
+import { BrandMenu } from "@/components/toolbar/BrandMenu";
+import { DesignToolbar } from "@/components/toolbar/DesignToolbar";
+import { EditorMenu } from "@/components/toolbar/EditorMenu";
+import { ToolbarButton } from "@/components/toolbar/ToolbarPrimitives";
 import { saveDeckForUser } from "@/lib/decks/decks";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
 import { createClient } from "@/lib/supabase/client";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 export function Toolbar({
   userEmail,
@@ -23,13 +25,6 @@ export function Toolbar({
 }) {
   const router = useRouter();
   const accentColor = usePresentationStore((s) => s.accentColor);
-  const setAccentColor = usePresentationStore((s) => s.setAccentColor);
-  const logoUrl = usePresentationStore((s) => s.logoUrl);
-  const setLogoUrl = usePresentationStore((s) => s.setLogoUrl);
-  const showLogoOnAllSlides = usePresentationStore((s) => s.showLogoOnAllSlides);
-  const setShowLogoOnAllSlides = usePresentationStore(
-    (s) => s.setShowLogoOnAllSlides
-  );
   const isExporting = usePresentationStore((s) => s.isExporting);
   const setIsExporting = usePresentationStore((s) => s.setIsExporting);
   const resetPresentation = usePresentationStore((s) => s.resetPresentation);
@@ -40,23 +35,10 @@ export function Toolbar({
   const getSavePayload = usePresentationStore((s) => s.getSavePayload);
 
   const [generateOpen, setGenerateOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleLogoUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => setLogoUrl(reader.result as string);
-      reader.readAsDataURL(file);
-    },
-    [setLogoUrl]
-  );
 
   const handleExport = useCallback(async () => {
     setIsExporting(true);
     try {
-      // Wait for PdfExportContainer to mount and paint all slides
       await new Promise((r) => setTimeout(r, 150));
 
       const container = document.getElementById("pdf-export-container");
@@ -117,121 +99,95 @@ export function Toolbar({
         open={generateOpen}
         onClose={() => setGenerateOpen(false)}
       />
-      <header className="flex items-center justify-between border-b border-muted-200 bg-white px-6 py-3">
-      <div className="flex items-center gap-3">
-        <AppLogo size={36} />
-        <div>
-          <h1 className="text-sm font-semibold text-muted-900">
-            Presentation Builder
-          </h1>
-          <p className="text-xs text-muted-400">Click any text to edit</p>
-        </div>
-      </div>
 
-      <div className="flex flex-wrap items-center gap-4">
-        <div className="flex shrink-0 items-center gap-2">
-          <ThemePicker />
-          <LayoutPicker />
-          <input
-            type="color"
-            value={accentColor}
-            onChange={(e) => setAccentColor(e.target.value)}
-            className="h-7 w-7 cursor-pointer rounded border-0 bg-transparent"
-            title="Custom accent color"
-          />
-        </div>
+      <header className="sticky top-0 z-40 border-b border-muted-200 bg-white/95 backdrop-blur-sm">
+        <div className="flex h-14 items-center gap-3 px-4">
+          {/* Brand */}
+          <div className="flex min-w-0 shrink-0 items-center gap-2.5">
+            <AppLogo size={32} />
+            <div className="hidden min-w-0 sm:block">
+              <p className="truncate text-sm font-semibold text-muted-900">
+                Presentation Builder
+              </p>
+              <p className="text-[11px] text-muted-400">Click text to edit</p>
+            </div>
+          </div>
 
-        <div className="h-6 w-px bg-muted-200" />
+          {/* Design controls */}
+          <div className="flex min-w-0 flex-1 justify-center overflow-x-auto px-1">
+            <DesignToolbar />
+          </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleLogoUpload}
-        />
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50"
-        >
-          {logoUrl ? "Change Logo" : "Upload Logo"}
-        </button>
-        {logoUrl && (
-          <>
-            <label className="flex items-center gap-1.5 text-xs text-muted-500">
-              <input
-                type="checkbox"
-                checked={showLogoOnAllSlides}
-                onChange={(e) => setShowLogoOnAllSlides(e.target.checked)}
-                className="rounded"
-              />
-              All slides
-            </label>
+          {/* Actions */}
+          <div className="flex shrink-0 items-center gap-1">
+            <BrandMenu />
+
+            {userEmail && (
+              <>
+                <EditorMenu
+                  isAdmin={isAdmin}
+                  onReset={resetPresentation}
+                  onGenerate={() => setGenerateOpen(true)}
+                />
+
+                <ToolbarButton
+                  onClick={handleSave}
+                  disabled={isSaving || readOnlyDeck}
+                  title={
+                    readOnlyDeck
+                      ? "Saving is disabled while viewing another user's deck"
+                      : "Save presentation"
+                  }
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                  </svg>
+                  {isSaving ? "Saving…" : "Save"}
+                </ToolbarButton>
+              </>
+            )}
+
             <button
               type="button"
-              onClick={() => setLogoUrl(null)}
-              className="text-xs text-muted-400 hover:text-muted-600"
+              onClick={handleExport}
+              disabled={isExporting}
+              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+              style={{ backgroundColor: accentColor }}
             >
-              Remove
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {isExporting ? "Exporting…" : "Export PDF"}
             </button>
-          </>
-        )}
 
-        <div className="h-6 w-px bg-muted-200" />
-
-        <button
-          type="button"
-          onClick={resetPresentation}
-          className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50"
-        >
-          Reset
-        </button>
-
-        {userEmail && (
-          <button
-            type="button"
-            onClick={() => setGenerateOpen(true)}
-            className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50"
-          >
-            Generate from topic
-          </button>
-        )}
-
-        {userEmail && (
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving || readOnlyDeck}
-            title={
-              readOnlyDeck
-                ? "Saving is disabled while viewing another user's deck"
-                : undefined
-            }
-            className="rounded-lg border border-muted-200 px-3 py-1.5 text-xs font-medium text-muted-600 hover:bg-muted-50 disabled:opacity-60"
-          >
-            {isSaving ? "Saving…" : "Save"}
-          </button>
-        )}
-
-        <button
-          type="button"
-          onClick={handleExport}
-          disabled={isExporting}
-          className="rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
-          style={{ backgroundColor: accentColor }}
-        >
-          {isExporting ? "Exporting…" : "Export to PDF"}
-        </button>
-
-        {userEmail && (
-          <>
-            <div className="h-6 w-px bg-muted-200" />
-            <AccountMenu email={userEmail} isAdmin={isAdmin} />
-          </>
-        )}
-      </div>
-    </header>
+            {userEmail && <AccountMenu email={userEmail} isAdmin={isAdmin} />}
+          </div>
+        </div>
+      </header>
     </>
   );
 }
