@@ -34,7 +34,7 @@ export function AccountMenu({
         aria-haspopup="menu"
       >
         <span
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-white"
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
           aria-hidden
         >
           {email.charAt(0).toUpperCase()}

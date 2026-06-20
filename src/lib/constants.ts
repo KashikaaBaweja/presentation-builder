@@ -2,7 +2,10 @@ import { getDefaultTheme } from "@/lib/themes";
 
 export const SLIDE_WIDTH = 1280;
 export const SLIDE_HEIGHT = 720;
-export const PDF_SCALE = 2; // ~192 DPI equivalent for crisp export
+export const PDF_SCALE = 2;
+export const PDF_FALLBACK_SCALE = 1.5;
+export const PDF_JPEG_QUALITY = 0.8;
+export const PDF_MAX_BYTES = 5 * 1024 * 1024;
 
 export const SLIDE_TYPE_LABELS = {
   cover: "Cover",

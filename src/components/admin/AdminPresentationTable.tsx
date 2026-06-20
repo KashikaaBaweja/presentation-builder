@@ -39,7 +39,7 @@ export function AdminPresentationTable({
               <td className="px-5 py-4 text-right">
                 <Link
                   href={`/editor?deck=${presentation.id}`}
-                  className="text-sm font-medium text-accent hover:underline"
+                  className="text-sm font-medium text-brand hover:underline"
                 >
                   Open
                 </Link>

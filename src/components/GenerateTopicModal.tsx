@@ -109,7 +109,7 @@ export function GenerateTopicModal({ open, onClose }: GenerateTopicModalProps) {
               rows={4}
               required
               disabled={loading}
-              className="w-full resize-none rounded-xl border border-muted-200 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted-400 focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:opacity-60"
+              className="w-full resize-none rounded-xl border border-muted-200 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted-400 focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60"
             />
           </div>
 
@@ -131,7 +131,7 @@ export function GenerateTopicModal({ open, onClose }: GenerateTopicModalProps) {
             <button
               type="submit"
               disabled={loading || !topic.trim()}
-              className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+              className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
             >
               {loading ? "Generating…" : "Generate"}
             </button>

@@ -7,7 +7,6 @@ export function SlideControls() {
   const currentSlide = usePresentationStore((s) => s.currentSlide);
   const nextSlide = usePresentationStore((s) => s.nextSlide);
   const prevSlide = usePresentationStore((s) => s.prevSlide);
-  const accentColor = usePresentationStore((s) => s.accentColor);
   const total = slides.length;
 
   return (
@@ -29,7 +28,7 @@ export function SlideControls() {
             style={{
               width: currentSlide === i ? 24 : 8,
               backgroundColor:
-                currentSlide === i ? accentColor : "var(--color-muted-200)",
+                currentSlide === i ? "var(--brand)" : "var(--color-muted-200)",
             }}
           />
         ))}
@@ -43,8 +42,7 @@ export function SlideControls() {
         type="button"
         onClick={nextSlide}
         disabled={currentSlide === total - 1}
-        className="rounded-xl px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ backgroundColor: accentColor }}
+        className="rounded-xl bg-brand px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         Next
       </button>

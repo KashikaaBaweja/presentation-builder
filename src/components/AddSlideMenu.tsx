@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export function AddSlideMenu() {
   const addSlide = usePresentationStore((s) => s.addSlide);
-  const accentColor = usePresentationStore((s) => s.accentColor);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -65,8 +64,7 @@ export function AddSlideMenu() {
               className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-muted-700 hover:bg-muted-50"
             >
               <span
-                className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: accentColor }}
+                className="h-2 w-2 shrink-0 rounded-full bg-brand"
               />
               {label}
             </button>

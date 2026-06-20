@@ -60,7 +60,7 @@ export default async function DecksPage() {
           </div>
           <Link
             href="/editor"
-            className="inline-flex shrink-0 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+            className="inline-flex shrink-0 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
           >
             New presentation
           </Link>
@@ -77,7 +77,7 @@ export default async function DecksPage() {
             <p className="text-muted-500">No saved presentations yet.</p>
             <Link
               href="/editor"
-              className="mt-4 inline-flex text-sm font-medium text-accent hover:underline"
+              className="mt-4 inline-flex text-sm font-medium text-brand hover:underline"
             >
               Create your first presentation
             </Link>
@@ -100,7 +100,7 @@ export default async function DecksPage() {
                       Updated {formatDeckUpdatedAt(deck.updated_at)}
                     </p>
                   </div>
-                  <span className="shrink-0 text-sm text-accent">Open</span>
+                  <span className="shrink-0 text-sm text-brand">Open</span>
                 </Link>
               </li>
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { ToolbarButton } from "@/components/toolbar/ToolbarPrimitives";
+import { processLogoImage } from "@/lib/processLogoImage";
 import { usePresentationStore } from "@/store/usePresentationStore";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -28,15 +29,19 @@ export function BrandMenu() {
   }, [open]);
 
   const handleLogoUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        setLogoUrl(reader.result as string);
+
+      try {
+        const dataUrl = await processLogoImage(file);
+        setLogoUrl(dataUrl);
         setOpen(false);
-      };
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Logo upload failed:", error);
+        alert("Could not process that image. Try a smaller JPG or PNG.");
+      }
+
       e.target.value = "";
     },
     [setLogoUrl]

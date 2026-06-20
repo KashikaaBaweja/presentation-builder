@@ -73,7 +73,7 @@ function ReorderButtons({
 }
 
 export function SlideSidebar({
-  canManageSlides = false,
+  canManageSlides = true,
 }: {
   canManageSlides?: boolean;
 }) {
@@ -83,7 +83,6 @@ export function SlideSidebar({
   const setCurrentSlide = usePresentationStore((s) => s.setCurrentSlide);
   const removeSlide = usePresentationStore((s) => s.removeSlide);
   const reorderSlides = usePresentationStore((s) => s.reorderSlides);
-  const accentColor = usePresentationStore((s) => s.accentColor);
 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
@@ -138,7 +137,7 @@ export function SlideSidebar({
                 canManageSlides && dragIndex === index ? "opacity-40" : ""
               } ${
                 canManageSlides && overIndex === index && dragIndex !== index
-                  ? "ring-2 ring-accent/40 ring-offset-1"
+                  ? "ring-2 ring-brand/40 ring-offset-1"
                   : ""
               }`}
               onDragEnter={
@@ -194,7 +193,7 @@ export function SlideSidebar({
                   }`}
                   style={
                     currentSlide === index
-                      ? { boxShadow: `inset 3px 0 0 ${accentColor}` }
+                      ? { boxShadow: "inset 3px 0 0 var(--brand)" }
                       : undefined
                   }
                 >
@@ -206,7 +205,7 @@ export function SlideSidebar({
                     }`}
                     style={
                       currentSlide === index
-                        ? { backgroundColor: accentColor }
+                        ? { backgroundColor: "var(--brand)" }
                         : undefined
                     }
                   >

@@ -88,7 +88,7 @@ export default async function AdminDashboardPage() {
                 </h2>
                 <Link
                   href="/admin/presentations"
-                  className="text-sm font-medium text-accent hover:underline"
+                  className="text-sm font-medium text-brand hover:underline"
                 >
                   View all
                 </Link>
@@ -130,7 +130,7 @@ export default async function AdminDashboardPage() {
                 </h2>
                 <Link
                   href="/admin/users"
-                  className="text-sm font-medium text-accent hover:underline"
+                  className="text-sm font-medium text-brand hover:underline"
                 >
                   View all
                 </Link>

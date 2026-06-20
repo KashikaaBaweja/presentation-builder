@@ -1,11 +1,11 @@
 "use client";
 
 import { AccountMenu } from "@/components/AccountMenu";
+import { AdminHeaderLink } from "@/components/admin/AdminHeaderLink";
 import { AppLogo } from "@/components/AppLogo";
 import { GenerateTopicModal } from "@/components/GenerateTopicModal";
 import { BrandMenu } from "@/components/toolbar/BrandMenu";
 import { DesignToolbar } from "@/components/toolbar/DesignToolbar";
-import { EditorMenu } from "@/components/toolbar/EditorMenu";
 import { ToolbarButton } from "@/components/toolbar/ToolbarPrimitives";
 import { saveDeckForUser } from "@/lib/decks/decks";
 import { exportPresentationToPdf } from "@/lib/exportPdf";
@@ -24,7 +24,6 @@ export function Toolbar({
   readOnlyDeck?: boolean;
 }) {
   const router = useRouter();
-  const accentColor = usePresentationStore((s) => s.accentColor);
   const isExporting = usePresentationStore((s) => s.isExporting);
   const setIsExporting = usePresentationStore((s) => s.setIsExporting);
   const resetPresentation = usePresentationStore((s) => s.resetPresentation);
@@ -115,14 +114,34 @@ export function Toolbar({
           <div className="flex shrink-0 items-center gap-1">
             <BrandMenu />
 
+            {userEmail && !readOnlyDeck && (
+              <>
+                <ToolbarButton
+                  onClick={() => setGenerateOpen(true)}
+                  title="Generate slides from a topic"
+                >
+                  Generate
+                </ToolbarButton>
+
+                <ToolbarButton
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Reset this presentation to the default deck?"
+                      )
+                    ) {
+                      resetPresentation();
+                    }
+                  }}
+                  title="Reset presentation"
+                >
+                  Reset
+                </ToolbarButton>
+              </>
+            )}
+
             {userEmail && (
               <>
-                <EditorMenu
-                  isAdmin={isAdmin}
-                  onReset={resetPresentation}
-                  onGenerate={() => setGenerateOpen(true)}
-                />
-
                 <ToolbarButton
                   onClick={handleSave}
                   disabled={isSaving || readOnlyDeck}
@@ -156,8 +175,7 @@ export function Toolbar({
               type="button"
               onClick={handleExport}
               disabled={isExporting}
-              className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
-              style={{ backgroundColor: accentColor }}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
             >
               <svg
                 width="14"
@@ -177,12 +195,17 @@ export function Toolbar({
               {isExporting ? "Exporting…" : "Export PDF"}
             </button>
 
-            {userEmail && <AccountMenu email={userEmail} isAdmin={isAdmin} />}
+            {userEmail && (
+              <>
+                {isAdmin && <AdminHeaderLink />}
+                <AccountMenu email={userEmail} isAdmin={isAdmin} />
+              </>
+            )}
           </div>
         </div>
 
         <div className="flex items-center justify-center overflow-x-auto border-t border-muted-100 bg-muted-50/60 px-4 py-2">
-          <DesignToolbar canManageSlides={isAdmin && !readOnlyDeck} />
+          <DesignToolbar canManageSlides={!readOnlyDeck} />
         </div>
       </header>
     </>

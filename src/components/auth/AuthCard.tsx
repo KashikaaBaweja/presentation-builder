@@ -62,7 +62,7 @@ export function AuthField({
         autoComplete={autoComplete}
         required={required}
         minLength={minLength}
-        className="w-full rounded-xl border border-muted-200 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted-400 focus:border-accent focus:ring-2 focus:ring-accent/20"
+        className="w-full rounded-xl border border-muted-200 bg-paper px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted-400 focus:border-brand focus:ring-2 focus:ring-brand/20"
       />
     </div>
   );
@@ -79,7 +79,7 @@ export function AuthSubmit({
     <button
       type="submit"
       disabled={loading}
-      className="w-full rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+      className="w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
     >
       {children}
     </button>
@@ -103,7 +103,7 @@ export function AuthLink({
   children: ReactNode;
 }) {
   return (
-    <Link href={href} className="font-medium text-accent hover:underline">
+    <Link href={href} className="font-medium text-brand hover:underline">
       {children}
     </Link>
   );

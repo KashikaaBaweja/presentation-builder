@@ -50,7 +50,7 @@ export function AdminShell({
                 href={item.href}
                 className={`block rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
                   active
-                    ? "bg-accent/10 text-accent"
+                    ? "bg-brand/10 text-brand"
                     : "text-muted-600 hover:bg-muted-50 hover:text-ink"
                 }`}
               >

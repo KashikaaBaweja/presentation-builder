@@ -108,7 +108,7 @@ export default function SignupForm() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <AuthError message={error} />
         {message && (
-          <p className="rounded-lg bg-accent/10 px-3 py-2 text-sm text-ink">
+          <p className="rounded-lg bg-brand/10 px-3 py-2 text-sm text-ink">
             {message}
           </p>
         )}

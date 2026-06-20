@@ -57,12 +57,10 @@ export function getDefaultTheme(): ThemePreset {
 }
 
 export function applyThemeToDocument(colors: {
-  accent: string;
   ink: string;
   paper: string;
 }) {
   const root = document.documentElement;
-  root.style.setProperty("--accent", colors.accent);
   root.style.setProperty("--ink", colors.ink);
   root.style.setProperty("--paper", colors.paper);
   root.style.setProperty("--background", colors.paper);

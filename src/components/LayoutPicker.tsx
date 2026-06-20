@@ -17,7 +17,7 @@ function LayoutThumbnail({
   slideType: LayoutSlideType;
   layoutId: string;
 }) {
-  const accent = "var(--accent, #FF5A36)";
+  const accent = "var(--brand, #6366f1)";
 
   if (slideType === "cover") {
     if (layoutId === "centered") {

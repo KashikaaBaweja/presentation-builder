@@ -41,6 +41,18 @@ function redirectWithSecurity(
 }
 
 export async function updateSession(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Supabase may redirect to Site URL (/) with ?code= instead of /auth/callback
+  if (
+    pathname !== "/auth/callback" &&
+    (searchParams.has("code") || searchParams.has("error"))
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    return applySecurityHeaders(NextResponse.redirect(url));
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
@@ -85,8 +97,6 @@ export async function updateSession(request: NextRequest) {
   ) {
     await supabase.auth.signOut();
   }
-
-  const { pathname } = request.nextUrl;
 
   if (isAuthRequiredApi(pathname) && !user) {
     return applySecurityHeaders(

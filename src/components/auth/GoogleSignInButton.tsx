@@ -1,6 +1,7 @@
 "use client";
 
 import { buildOAuthCallbackUrl } from "@/lib/auth/oauth";
+import { getSiteOrigin } from "@/lib/auth/site-origin";
 import { formatAuthError } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
@@ -21,7 +22,10 @@ export function GoogleSignInButton({
 
     try {
       const supabase = createClient();
-      const redirectTo = buildOAuthCallbackUrl(window.location.origin, next);
+      const redirectTo = buildOAuthCallbackUrl(
+        getSiteOrigin(window.location.origin),
+        next
+      );
 
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",

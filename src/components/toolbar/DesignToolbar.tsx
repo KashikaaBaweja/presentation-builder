@@ -84,7 +84,7 @@ function AccentPicker() {
 }
 
 export function DesignToolbar({
-  canManageSlides = false,
+  canManageSlides = true,
 }: {
   canManageSlides?: boolean;
 }) {
