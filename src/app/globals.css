@@ -1,15 +1,12 @@
 @import "tailwindcss";
 
-/* Theme tokens — ink, paper, accent (slides), brand (app UI) */
+/* App chrome tokens — fixed, never tied to deck theme */
 :root {
   --background: #faf9f7;
   --foreground: #1e1b4b;
   --paper: #faf9f7;
   --ink: #1e1b4b;
-  /* Fixed app chrome color — never tied to deck accent */
   --brand: #6366f1;
-  /* Deck accent default; overridden on .slide-frame only */
-  --accent: #6366f1;
 }
 
 @theme inline {
@@ -17,8 +14,8 @@
   --color-foreground: var(--foreground);
   --color-paper: var(--paper);
   --color-ink: var(--ink);
-  --color-brand: var(--brand);
-  --color-accent: var(--accent);
+  /* Literal hex so deck accent can never override app button colors */
+  --color-brand: #6366f1;
   --color-muted-50: #f8fafc;
   --color-muted-100: #f1f5f9;
   --color-muted-200: #e2e8f0;

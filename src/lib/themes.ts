@@ -55,14 +55,3 @@ export function getThemeById(id: string): ThemePreset | undefined {
 export function getDefaultTheme(): ThemePreset {
   return getThemeById(DEFAULT_THEME_ID) ?? THEMES[0];
 }
-
-export function applyThemeToDocument(colors: {
-  ink: string;
-  paper: string;
-}) {
-  const root = document.documentElement;
-  root.style.setProperty("--ink", colors.ink);
-  root.style.setProperty("--paper", colors.paper);
-  root.style.setProperty("--background", colors.paper);
-  root.style.setProperty("--foreground", colors.ink);
-}

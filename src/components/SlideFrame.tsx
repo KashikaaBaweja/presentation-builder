@@ -43,7 +43,6 @@ export function SlideFrame({
         fontFamily: fonts.body,
         ["--font-heading" as string]: fonts.heading,
         ["--font-body" as string]: fonts.body,
-        ["--accent" as string]: accentColor,
       }}
       data-variant={variant}
     >

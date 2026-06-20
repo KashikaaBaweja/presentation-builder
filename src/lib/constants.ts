@@ -24,6 +24,9 @@ export const SLIDE_TYPE_LABELS = {
 /** @deprecated Use SLIDE_TYPE_LABELS with dynamic slides */
 export const SLIDE_NAMES = Object.values(SLIDE_TYPE_LABELS);
 
+/** Fixed indigo for app chrome (toolbar, buttons, links) — never follows deck accent. */
+export const APP_BRAND_COLOR = "#6366f1";
+
 export const DEFAULT_ACCENT = getDefaultTheme().accent;
 export const DEFAULT_INK = getDefaultTheme().ink;
 export const DEFAULT_PAPER = getDefaultTheme().paper;

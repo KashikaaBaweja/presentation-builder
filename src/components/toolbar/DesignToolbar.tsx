@@ -65,7 +65,7 @@ function AccentPicker() {
   return (
     <label
       className="relative flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md hover:bg-muted-50"
-      title="Accent color"
+      title="Slide accent color (slides only)"
     >
       <span
         className="h-5 w-5 rounded-full border-2 border-white shadow-sm ring-1 ring-muted-200"
@@ -77,7 +77,7 @@ function AccentPicker() {
         value={accentColor}
         onChange={(e) => setAccentColor(e.target.value)}
         className="absolute inset-0 cursor-pointer opacity-0"
-        aria-label="Accent color"
+        aria-label="Slide accent color"
       />
     </label>
   );
