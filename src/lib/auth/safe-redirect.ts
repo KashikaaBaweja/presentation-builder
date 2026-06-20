@@ -1,4 +1,4 @@
-const DEFAULT_REDIRECT = "/decks";
+export const DEFAULT_REDIRECT = "/decks";
 
 /**
  * Validates post-login redirect paths to prevent open redirects.

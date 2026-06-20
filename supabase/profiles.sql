@@ -49,7 +49,7 @@ create policy "Admins read all profiles"
   using (public.is_admin());
 
 -- ---------------------------------------------------------------------------
--- Auto-create profile on signup
+-- Auto-create profile on signup (email, Google OAuth, or any auth provider)
 -- ---------------------------------------------------------------------------
 
 create or replace function public.handle_new_user()

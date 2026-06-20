@@ -2,11 +2,13 @@
 
 import {
   AuthCard,
+  AuthDivider,
   AuthError,
   AuthField,
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { getSafeRedirectPath } from "@/lib/auth/safe-redirect";
 import { normalizeAuthEmail } from "@/lib/auth/password";
 import { formatAuthError } from "@/lib/supabase/auth-errors";
@@ -28,8 +30,14 @@ export default function LoginForm() {
       setError(
         "Supabase is not configured for this deployment. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY on Vercel, then redeploy."
       );
+      return;
     }
-  }, []);
+
+    const callbackError = searchParams.get("error");
+    if (callbackError) {
+      setError(decodeURIComponent(callbackError));
+    }
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,7 +74,13 @@ export default function LoginForm() {
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
+        <GoogleSignInButton
+          next={next}
+          disabled={!isSupabaseConfigured()}
+        />
+        <AuthDivider />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <AuthError message={error} />
         <AuthField
           id="email"
@@ -87,7 +101,8 @@ export default function LoginForm() {
         <AuthSubmit loading={loading}>
           {loading ? "Signing in…" : "Sign in"}
         </AuthSubmit>
-      </form>
+        </form>
+      </div>
     </AuthCard>
   );
 }

@@ -2,11 +2,13 @@
 
 import {
   AuthCard,
+  AuthDivider,
   AuthError,
   AuthField,
   AuthLink,
   AuthSubmit,
 } from "@/components/auth/AuthCard";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { MIN_PASSWORD_LENGTH, normalizeAuthEmail, validatePassword } from "@/lib/auth/password";
 import { formatAuthError, isSignupEmailFailure } from "@/lib/supabase/auth-errors";
 import { createClient } from "@/lib/supabase/client";
@@ -100,7 +102,10 @@ export default function SignupForm() {
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
+        <GoogleSignInButton disabled={!isSupabaseConfigured()} />
+        <AuthDivider />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <AuthError message={error} />
         {message && (
           <p className="rounded-lg bg-accent/10 px-3 py-2 text-sm text-ink">
@@ -127,7 +132,8 @@ export default function SignupForm() {
         <AuthSubmit loading={loading}>
           {loading ? "Creating account…" : "Sign up"}
         </AuthSubmit>
-      </form>
+        </form>
+      </div>
     </AuthCard>
   );
 }
