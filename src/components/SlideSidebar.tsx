@@ -72,7 +72,11 @@ function ReorderButtons({
   );
 }
 
-export function SlideSidebar() {
+export function SlideSidebar({
+  canManageSlides = false,
+}: {
+  canManageSlides?: boolean;
+}) {
   const slides = usePresentationStore((s) => s.slides);
   const slideData = usePresentationStore((s) => s.slideData);
   const currentSlide = usePresentationStore((s) => s.currentSlide);
@@ -117,43 +121,69 @@ export function SlideSidebar() {
         <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-400">
           Slides
         </h2>
-        <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
-          Drag the grip, or use ▲▼ to reorder. Works in Safari too.
-        </p>
+        {canManageSlides ? (
+          <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
+            Drag the grip, or use ▲▼ to reorder. Works in Safari too.
+          </p>
+        ) : (
+          <p className="mb-3 px-2 text-[11px] leading-snug text-muted-400">
+            Select a slide to edit its text.
+          </p>
+        )}
         <div className="flex flex-col gap-2">
           {slides.map((slide, index) => (
             <div
               key={slide.id}
               className={`group relative rounded-xl transition-all ${
-                dragIndex === index ? "opacity-40" : ""
+                canManageSlides && dragIndex === index ? "opacity-40" : ""
               } ${
-                overIndex === index && dragIndex !== index
+                canManageSlides && overIndex === index && dragIndex !== index
                   ? "ring-2 ring-accent/40 ring-offset-1"
                   : ""
               }`}
-              onDragEnter={(e) => {
-                e.preventDefault();
-                setOverIndex(index);
-              }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-                setOverIndex(index);
-              }}
-              onDragLeave={() => {
-                setOverIndex((current) => (current === index ? null : current));
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                handleDrop(index);
-              }}
+              onDragEnter={
+                canManageSlides
+                  ? (e) => {
+                      e.preventDefault();
+                      setOverIndex(index);
+                    }
+                  : undefined
+              }
+              onDragOver={
+                canManageSlides
+                  ? (e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                      setOverIndex(index);
+                    }
+                  : undefined
+              }
+              onDragLeave={
+                canManageSlides
+                  ? () => {
+                      setOverIndex((current) =>
+                        current === index ? null : current
+                      );
+                    }
+                  : undefined
+              }
+              onDrop={
+                canManageSlides
+                  ? (e) => {
+                      e.preventDefault();
+                      handleDrop(index);
+                    }
+                  : undefined
+              }
             >
               <div className="flex items-center">
-                <DragHandle
-                  index={index}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                />
+                {canManageSlides && (
+                  <DragHandle
+                    index={index}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => setCurrentSlide(index)}
@@ -186,7 +216,7 @@ export function SlideSidebar() {
                     {getSlideSidebarLabel(slide, slideData)}
                   </span>
                 </button>
-                {slides.length > 1 && (
+                {canManageSlides && slides.length > 1 && (
                   <ReorderButtons
                     index={index}
                     total={slides.length}
@@ -194,7 +224,7 @@ export function SlideSidebar() {
                   />
                 )}
               </div>
-              {slides.length > 1 && (
+              {canManageSlides && slides.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeSlide(slide.id)}
@@ -208,7 +238,7 @@ export function SlideSidebar() {
           ))}
         </div>
       </div>
-      <AddSlideMenu />
+      {canManageSlides && <AddSlideMenu />}
     </aside>
   );
 }

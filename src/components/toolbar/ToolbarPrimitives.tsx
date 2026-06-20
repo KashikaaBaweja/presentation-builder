@@ -1,5 +1,13 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
+export function ToolbarLabel({ children }: { children: ReactNode }) {
+  return (
+    <span className="shrink-0 text-[11px] font-semibold uppercase tracking-wide text-muted-400">
+      {children}
+    </span>
+  );
+}
+
 export function ToolbarDivider() {
   return <div className="mx-1 h-5 w-px shrink-0 bg-muted-200" aria-hidden />;
 }
@@ -73,7 +81,7 @@ export function ToolbarSelect({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       aria-label={ariaLabel}
-      className={`h-8 max-w-[7.5rem] shrink-0 cursor-pointer truncate rounded-md border-0 bg-transparent px-2 text-xs font-medium text-muted-700 outline-none hover:bg-muted-50 focus:bg-muted-50 ${className}`}
+      className={`h-8 min-w-[9rem] shrink-0 cursor-pointer truncate rounded-md border border-muted-200 bg-white px-2.5 text-xs font-medium text-muted-800 shadow-sm outline-none hover:border-muted-300 focus:border-muted-400 ${className}`}
     >
       {children}
     </select>

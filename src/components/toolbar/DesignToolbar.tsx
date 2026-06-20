@@ -4,6 +4,7 @@ import { LayoutPicker } from "@/components/LayoutPicker";
 import {
   ToolbarDivider,
   ToolbarGroup,
+  ToolbarLabel,
   ToolbarSegmented,
   ToolbarSelect,
   ToolbarShell,
@@ -82,7 +83,11 @@ function AccentPicker() {
   );
 }
 
-export function DesignToolbar() {
+export function DesignToolbar({
+  canManageSlides = false,
+}: {
+  canManageSlides?: boolean;
+}) {
   const themeId = usePresentationStore((s) => s.themeId);
   const setTheme = usePresentationStore((s) => s.setTheme);
   const fontId = usePresentationStore((s) => s.fontId);
@@ -108,11 +113,12 @@ export function DesignToolbar() {
 
       <ToolbarDivider />
 
-      <ToolbarGroup>
+      <ToolbarGroup className="gap-2">
+        <ToolbarLabel>Font</ToolbarLabel>
         <ToolbarSelect
           value={fontId}
           onChange={(value) => setFontId(value as FontId)}
-          aria-label="Font"
+          aria-label="Font family"
         >
           {FONT_OPTIONS.map((option) => (
             <option key={option.id} value={option.id}>
@@ -120,6 +126,12 @@ export function DesignToolbar() {
             </option>
           ))}
         </ToolbarSelect>
+      </ToolbarGroup>
+
+      <ToolbarDivider />
+
+      <ToolbarGroup className="gap-2">
+        <ToolbarLabel>Size</ToolbarLabel>
         <ToolbarSegmented
           value={textSizeId}
           onChange={(value) => setTextSizeId(value as TextSizeId)}
@@ -139,11 +151,15 @@ export function DesignToolbar() {
 
       <ToolbarDivider />
 
-      <ToolbarGroup className="px-0.5">
-        <LayoutPicker variant="toolbar" />
-      </ToolbarGroup>
+      {canManageSlides && (
+        <>
+          <ToolbarGroup className="px-0.5">
+            <LayoutPicker variant="toolbar" />
+          </ToolbarGroup>
 
-      <ToolbarDivider />
+          <ToolbarDivider />
+        </>
+      )}
 
       <ToolbarGroup className="px-0.5">
         <AccentPicker />

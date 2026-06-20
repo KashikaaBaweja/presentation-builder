@@ -51,7 +51,9 @@ export function PresentationBuilder({
           readOnlyDeck={readOnlyDeck}
         />
         <div className="flex flex-1 overflow-hidden">
-          <SlideSidebar />
+          <SlideSidebar
+            canManageSlides={isAdmin && !readOnlyDeck}
+          />
           <div className="flex flex-1 flex-col overflow-hidden">
             <SlidePreview />
             <SlideControls />

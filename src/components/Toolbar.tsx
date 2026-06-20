@@ -101,8 +101,7 @@ export function Toolbar({
       />
 
       <header className="sticky top-0 z-40 border-b border-muted-200 bg-white/95 backdrop-blur-sm">
-        <div className="flex h-14 items-center gap-3 px-4">
-          {/* Brand */}
+        <div className="flex h-12 items-center justify-between gap-3 px-4">
           <div className="flex min-w-0 shrink-0 items-center gap-2.5">
             <AppLogo size={32} />
             <div className="hidden min-w-0 sm:block">
@@ -113,12 +112,6 @@ export function Toolbar({
             </div>
           </div>
 
-          {/* Design controls */}
-          <div className="flex min-w-0 flex-1 justify-center overflow-x-auto px-1">
-            <DesignToolbar />
-          </div>
-
-          {/* Actions */}
           <div className="flex shrink-0 items-center gap-1">
             <BrandMenu />
 
@@ -186,6 +179,10 @@ export function Toolbar({
 
             {userEmail && <AccountMenu email={userEmail} isAdmin={isAdmin} />}
           </div>
+        </div>
+
+        <div className="flex items-center justify-center overflow-x-auto border-t border-muted-100 bg-muted-50/60 px-4 py-2">
+          <DesignToolbar canManageSlides={isAdmin && !readOnlyDeck} />
         </div>
       </header>
     </>
