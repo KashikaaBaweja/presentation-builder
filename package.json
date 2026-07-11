@@ -9,14 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@21st-sdk/agent": "^0.0.18",
+    "@21st-sdk/nextjs": "^0.0.11",
+    "@21st-sdk/node": "^0.1.1",
+    "@21st-sdk/react": "^0.1.4",
+    "@ai-sdk/react": "^3.0.211",
     "@google/genai": "^2.8.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
+    "ai": "^6.0.209",
     "html-to-image": "^1.11.13",
     "jspdf": "^4.2.1",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
