@@ -267,6 +267,25 @@ Tested on latest Chrome, Firefox, and Safari. Best experience on desktop viewpor
 
 ---
 
+## Troubleshooting
+
+### Google sign-in: "provider is not enabled"
+
+1. Supabase → **Authentication → Providers → Google** → enable and add Client ID/Secret
+2. Google Cloud → OAuth client → redirect URI: `https://YOUR-PROJECT.supabase.co/auth/v1/callback`
+3. Supabase → **URL Configuration** → add `{SITE_URL}/auth/callback` to Redirect URLs
+4. Set `NEXT_PUBLIC_SITE_URL` on Vercel and redeploy
+
+### Email signup: "Check your email to confirm"
+
+Supabase requires email confirmation by default. Click the link in your inbox, or disable **Confirm email** under Authentication → Providers → Email for local testing.
+
+### `npm install` ERESOLVE on @21st-sdk/nextjs
+
+Use `@ai-sdk/react@^2.0.0` and `ai@^5.0.0` (see `package.json`). Run `npm install` again.
+
+---
+
 ## License
 
 Private project — built by [Kashika Baweja](https://github.com/KashikaaBaweja).
